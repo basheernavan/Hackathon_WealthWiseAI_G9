@@ -13,3 +13,10 @@ def test_unreadable_row_is_skipped_with_a_warning():
     transactions, warnings = parse_bank_csv(content)
     assert [t.description for t in transactions] == ["TESCO"]
     assert len(warnings) == 1 and "row 2" in warnings[0]
+
+
+def test_csv_with_category_and_unsigned_amounts_is_read():
+    content = b"Date,Category,Amount\n2026-01-01,Salary,3272\n2026-01-03,Rent,1100\n2026-01-05,Netflix,17.99\n"
+    transactions, warnings = parse_bank_csv(content)
+    assert [(t.description, t.amount, t.balance) for t in transactions] == [("Salary", 3272.0, None), ("Rent", -1100.0, None), ("Netflix", -17.99, None)]
+    assert len(warnings) == 1 and "Salary" in warnings[0]
