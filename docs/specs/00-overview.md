@@ -2,6 +2,16 @@
 
 **Deadline:** Sunday 2026-10-11, 12:00 noon. **Team:** anyone can pick up any task; people may hand over mid-task. How to work together: [docs/COLLABORATION.md](../COLLABORATION.md).
 
+## Team
+
+All three developers are collaborators on the GitHub repo and can push branches and merge PRs.
+
+| GitHub | Role |
+| --- | --- |
+| [basheernavan](https://github.com/basheernavan) | Repo owner, D1 pitch deck |
+| [dilipmath](https://github.com/dilipmath) | Developer |
+| [kmrsdrm-arch](https://github.com/kmrsdrm-arch) | Developer |
+
 ## Pipeline
 
 ```
