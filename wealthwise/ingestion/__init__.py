@@ -8,7 +8,7 @@ The parsers live in their own modules (tasks A1-A5); call them through this modu
 from pathlib import PurePath
 
 from wealthwise.contracts import DocumentType, FinancialProfile, SourceDocument, UploadedDocument
-from wealthwise.ingestion import bank_csv, bank_pdf, detect, loan_xlsx, payslip_pdf  # noqa: F401
+from wealthwise.ingestion import bank_csv, bank_pdf, detect, loan_pdf, loan_xlsx, payslip_pdf  # noqa: F401
 
 
 def load_profile(documents: list[UploadedDocument]) -> FinancialProfile:
@@ -38,7 +38,8 @@ def load_profile(documents: list[UploadedDocument]) -> FinancialProfile:
             if payslip:
                 profile.payslips.append(payslip)
         else:
-            debts, warnings = loan_xlsx.parse_loan_xlsx(document.content)
+            parse = loan_pdf.parse_loan_pdf if extension == ".pdf" else loan_xlsx.parse_loan_xlsx
+            debts, warnings = parse(document.content)
             profile.debts.extend(debts)
 
         profile.sources.append(SourceDocument(filename=document.filename, document_type=document_type, warnings=warnings))

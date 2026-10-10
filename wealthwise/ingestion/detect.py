@@ -1,5 +1,6 @@
 """Task A1: decide what kind of document a file is. Spec: docs/specs/01-ingestion.md#a1-detect-the-document-type"""
 
+import re
 from pathlib import PurePath
 
 import pymupdf
@@ -28,6 +29,8 @@ def detect_document_type(filename: str, content: bytes) -> DocumentType | None:
         text = first_page_text(content)
         if "Net Pay" in text:
             return DocumentType.PAYSLIP
+        if re.search(r"\bLOAN\b|\bCREDIT CARD\b", text, re.IGNORECASE) and re.search(r"Interest Rate|\bAPR\b", text):
+            return DocumentType.LOAN_STATEMENT
         if "Statement" in text and "Balance" in text:
             return DocumentType.BANK_STATEMENT
     return None
