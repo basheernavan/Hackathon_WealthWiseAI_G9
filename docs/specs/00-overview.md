@@ -31,7 +31,7 @@ Every task has its own file (a stub with the exact signature is already on `main
 | --- | --- | --- |
 | A: Ingestion | [01-ingestion.md](01-ingestion.md) | A1 detect type #1 · ~~A2 bank CSV #2~~ ✅ · A3 bank PDF #3 · A4 payslip PDF #4 · ~~A5 loan XLSX #5~~ ✅ · A6 `load_profile` #6 |
 | B: Analysis + agents | [02-analysis.md](02-analysis.md) | ~~B1 categorise #7~~ ✅ · ~~B2 metrics #8~~ ✅ · ~~B3 score #9~~ ✅ · B4 subscriptions #10 · B5 plans #11 · B6 agents #12 |
-| C: Dashboard + Ask | [03-dashboard-and-rag.md](03-dashboard-and-rag.md) | C1 app shell #13 · C2 report view #14 · C3 Ask WealthWise #15 |
+| C: Dashboard + Ask | [03-dashboard-and-rag.md](03-dashboard-and-rag.md) | ~~C1 app shell #13~~ ✅ · C2 report view #14 · C3 Ask WealthWise #15 |
 | D: Demo + pitch | this file | D1 align pitch deck with the ADRs (Basheer) #16 · D2 demo rehearsal #17 |
 
 When the last task of a stream is merged, [`tests/test_acceptance.py`](../../tests/test_acceptance.py) stops skipping and checks that stream end to end.
