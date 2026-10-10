@@ -36,3 +36,8 @@ def test_salary_credits_equal_payslip_net_pay(profile):
 def test_answer_key_has_one_category_per_transaction(profile):
     key = json.loads((SAMPLES / "expected.json").read_text(encoding="utf-8"))
     assert len(key["transaction_categories"]) == len(profile.transactions)
+
+
+def test_shared_fixtures_load(categorised_profile, expected_metrics):
+    assert all(t.category is not None for t in categorised_profile.transactions)
+    assert expected_metrics.months_covered == 3

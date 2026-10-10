@@ -1,8 +1,8 @@
 # WealthWise
 
-Hackathon pilot: upload a bank statement, payslip and loan statement, and get a Financial Health Score plus spending, debt and savings advice. Deadline **2026-10-11 12:00**. Three developers (Sundar, Dilip, Lea) each build one stream in parallel.
+Hackathon pilot: upload a bank statement, payslip and loan statement, and get a Financial Health Score plus spending, debt and savings advice. Deadline **2026-10-11 12:00**. Work is split into independent tasks (one GitHub issue each) that anyone can pick up or hand over.
 
-Read first: [CONTEXT.md](CONTEXT.md) (glossary and rules), [docs/specs/00-overview.md](docs/specs/00-overview.md) (streams, ground rules, merge checkpoints), then your stream's spec in `docs/specs/`.
+Read first: [CONTEXT.md](CONTEXT.md) (glossary and rules), [docs/specs/00-overview.md](docs/specs/00-overview.md) (tasks, ground rules, milestones), then the spec section your issue links. Claiming, branching, handing over and merging: follow [docs/COLLABORATION.md](docs/COLLABORATION.md).
 
 ## Commands (Windows PowerShell)
 
@@ -17,21 +17,24 @@ python scripts/generate_samples.py   # only if the generator changes
 
 ## Layout
 
-- `wealthwise/contracts.py`: the shared data contract. Frozen; changes need a PR seen by all three developers.
-- `wealthwise/ingestion/`: Stream A, files to `FinancialProfile`.
-- `wealthwise/analysis/`: Stream B, `FinancialProfile` to `Report` (metrics, score, LangGraph agents).
-- `app.py`, `wealthwise/rag/`: Stream C, the Streamlit dashboard and Ask WealthWise.
+- `wealthwise/contracts.py`: the shared data contract. Frozen; changes need a PR approved by two other developers.
+- `wealthwise/ingestion/`: Stream A, files to `FinancialProfile`. One module per parser.
+- `wealthwise/analysis/`: Stream B, `FinancialProfile` to `Report`. `build_report` is wired; one module per step.
+- `app.py`, `wealthwise/dashboard.py`, `wealthwise/rag/`: Stream C, the Streamlit app, report view and Ask WealthWise.
 - `wealthwise/llm.py`: the only place that creates the LLM client (OpenRouter).
+- `tests/conftest.py`: fixtures from `samples/` so each task tests in isolation. `tests/test_acceptance.py` skips until a stream is complete.
 - `samples/`: fictional documents and answer keys. Generated; never hand-edit.
 - `docs/adr/`: decisions. Respect them, or flag a conflict explicitly.
+- `documents/`: pitch and background from an earlier plan; the repo wins where they disagree.
 
 ## Rules
 
 - Numbers come from code; the LLM only writes explanation text (ADR-0001). The app must work with no API key.
-- Stay inside your stream's folder. Shared files change only via a small separate PR.
-- Write the spec's acceptance criteria as tests. Run `pytest` before every PR.
-- Never commit `.env`, `uploads/` or real financial documents.
-- Branches: `sundar-dev`, `dilip-dev`, `lea-dev`. PR into `main` at each merge checkpoint.
+- Edit only the files your issue names, and keep the stub's signature. Shared files change via a small separate PR.
+- Write the spec's "Done when" items as tests, test-first. Run `pytest` before every PR.
+- Commit and push at least every 30 minutes, so the task can be handed over.
+- Keep `.env`, `uploads/` and real financial documents out of git.
+- Branch per issue: `<issue#>-<short-name>`, PR into `main` with `Closes #<issue#>`.
 
 ## Agent skills
 

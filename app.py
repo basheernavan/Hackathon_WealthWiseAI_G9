@@ -1,4 +1,4 @@
-"""WealthWise Streamlit entry point. Stream C owns this file: docs/specs/03-dashboard-and-rag.md"""
+"""WealthWise Streamlit entry point. Task C1: docs/specs/03-dashboard-and-rag.md#c1-app-shell-apppy"""
 
 import streamlit as st
 

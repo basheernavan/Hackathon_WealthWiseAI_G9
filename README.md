@@ -19,4 +19,4 @@ Try it with the fictional files in [samples/](samples/).
 
 ## For developers
 
-Start with [CLAUDE.md](CLAUDE.md), then [CONTEXT.md](CONTEXT.md) and [docs/specs/00-overview.md](docs/specs/00-overview.md). Background material (pitch, plan, budget) is in [documents/](documents/).
+Start with [docs/COLLABORATION.md](docs/COLLABORATION.md): setup, picking a task, handing over and merging. Then [CONTEXT.md](CONTEXT.md) and [docs/specs/00-overview.md](docs/specs/00-overview.md). Background material (pitch, plan, budget) is in [documents/](documents/).
