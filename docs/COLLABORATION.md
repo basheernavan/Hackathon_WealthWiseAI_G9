@@ -12,7 +12,7 @@ Anyone can pick up any task. Each task is one GitHub issue, one branch and one P
 
 ## 1. One-time setup (about 10 minutes)
 
-1. Accept the GitHub collaborator invite from Basheer (check your email). Without it you can't push.
+1. You're already a collaborator on the repo (the team is listed in [00-overview.md](specs/00-overview.md#team)). If you haven't yet, accept the invite from your GitHub notifications or email, or you can't push.
 2. Install [Python 3.11+](https://www.python.org/downloads/), [Git](https://git-scm.com/download/win) and the [GitHub CLI](https://cli.github.com/), then run `gh auth login`.
 3. Set your real name, so commits show who did what:
    ```powershell
@@ -125,6 +125,6 @@ Continue from **Next** in the handoff comment, then carry on from step 4.
 | `pytest` fails on `main` | Post in the chat at once. Fixing `main` comes before any task. |
 | A bug outside your task | `gh issue create --label needs-triage --title "..." --body "..."`, then carry on. |
 | You ran `generate_samples.py` by accident | `git checkout -- samples/` |
-| Push rejected (`403`) | Your collaborator invite isn't accepted yet: step 1.1. |
+| Push rejected (`403`) | Accept your collaborator invite (step 1.1), and check `gh auth status` shows your own account. |
 | Push rejected (`non-fast-forward`) | `git pull`, then `git push`. |
 | After 08:00 Sunday | Bug fixes only. Code freeze at 10:30. |
