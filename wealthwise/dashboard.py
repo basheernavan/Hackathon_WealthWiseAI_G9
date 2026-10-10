@@ -1,4 +1,4 @@
-"""Task C2: render a Report in Streamlit, plus money/percent formatting. Spec: docs/specs/03-dashboard-and-rag.md#c2-report-view
+"""Task C2: render a Report in Streamlit, plus money/percent formatting. Spec: docs/specs/03-dashboard-and-rag.md#c2-report-view-wealthwisedashboardpy
 
 app.py (task C1) calls render_report; this placeholder keeps the app running until C2 is built.
 """
