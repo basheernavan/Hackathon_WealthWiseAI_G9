@@ -1,0 +1,136 @@
+{
+  "metrics": {
+    "months_covered": 3,
+    "monthly_income": 3150.0,
+    "monthly_spending": 2935.6,
+    "monthly_surplus": 214.4,
+    "spending_by_category": {
+      "debt_repayment": 405.0,
+      "entertainment": 84.81,
+      "groceries": 356.1,
+      "housing": 1350.0,
+      "shopping": 166.6,
+      "subscriptions": 67.97,
+      "takeaway": 215.12,
+      "transport": 120.0,
+      "utilities": 170.0
+    },
+    "savings_rate": 0.0681,
+    "debt_to_income": 0.1286,
+    "total_debt": 9900.0,
+    "current_balance": 3843.2,
+    "emergency_fund_months": 1.31,
+    "discretionary_share": 0.1821
+  },
+  "health_score": {
+    "score": 67,
+    "band": "fair",
+    "components": [
+      {
+        "name": "savings_rate",
+        "value": 0.0681,
+        "points": 10.21,
+        "max_points": 30
+      },
+      {
+        "name": "debt_to_income",
+        "value": 0.1286,
+        "points": 27.86,
+        "max_points": 30
+      },
+      {
+        "name": "emergency_fund",
+        "value": 1.3092,
+        "points": 8.73,
+        "max_points": 20
+      },
+      {
+        "name": "discretionary_share",
+        "value": 0.1821,
+        "points": 20.0,
+        "max_points": 20
+      }
+    ]
+  },
+  "subscriptions": [
+    {
+      "name": "FLYEFIT GYM",
+      "monthly_amount": 39.99,
+      "months_seen": 3
+    },
+    {
+      "name": "NETFLIX.COM",
+      "monthly_amount": 15.99,
+      "months_seen": 3
+    },
+    {
+      "name": "SPOTIFY",
+      "monthly_amount": 11.99,
+      "months_seen": 3
+    }
+  ],
+  "identified_cuts": 107.56,
+  "debt_plan": {
+    "strategy": "avalanche",
+    "payoff_order": [
+      "Northwind Bank Visa Credit Card",
+      "Northwind Bank Car Loan"
+    ],
+    "extra_monthly_payment": 160.98,
+    "months_to_debt_free_current": 28,
+    "months_to_debt_free_with_extra": 20,
+    "months_saved": 8,
+    "interest_saved": 513.39
+  },
+  "savings_plan": {
+    "monthly_amount": 160.98,
+    "target_amount": 8806.8,
+    "months_to_target": 31
+  },
+  "recommendations": [
+    {
+      "agent": "spending",
+      "title": "Halve takeaway spending",
+      "detail": "Takeaway averages EUR 215.12/month. Cutting it in half frees EUR 107.56/month.",
+      "monthly_impact": 107.56,
+      "evidence": [
+        {
+          "date": "2026-07-06",
+          "description": "UBER EATS",
+          "amount": -32.99,
+          "balance": 1293.89,
+          "category": "takeaway"
+        },
+        {
+          "date": "2026-07-08",
+          "description": "UBER EATS",
+          "amount": -37.65,
+          "balance": 1244.25,
+          "category": "takeaway"
+        },
+        {
+          "date": "2026-07-15",
+          "description": "UBER EATS",
+          "amount": -29.23,
+          "balance": 861.06,
+          "category": "takeaway"
+        }
+      ]
+    },
+    {
+      "agent": "debt",
+      "title": "Pay off the Northwind Bank Visa Credit Card first",
+      "detail": "Adding EUR 160.98/month makes you debt-free 8 months earlier and saves EUR 513.39 in interest.",
+      "monthly_impact": 160.98,
+      "evidence": []
+    },
+    {
+      "agent": "savings",
+      "title": "Build a 3-month emergency fund",
+      "detail": "Save EUR 160.98/month to reach EUR 8,806.80 in 31 months.",
+      "monthly_impact": 160.98,
+      "evidence": []
+    }
+  ],
+  "llm_used": false
+}

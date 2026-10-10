@@ -1,0 +1,663 @@
+{
+  "transactions": [
+    {
+      "date": "2026-07-01",
+      "description": "RENT - HARBOUR PROPERTY MGMT",
+      "amount": -1350.0,
+      "balance": 1850.0,
+      "category": null
+    },
+    {
+      "date": "2026-07-02",
+      "description": "NETFLIX.COM",
+      "amount": -15.99,
+      "balance": 1834.01,
+      "category": null
+    },
+    {
+      "date": "2026-07-02",
+      "description": "TESCO",
+      "amount": -58.75,
+      "balance": 1775.26,
+      "category": null
+    },
+    {
+      "date": "2026-07-02",
+      "description": "THE BRAZEN HEAD PUB",
+      "amount": -38.38,
+      "balance": 1736.88,
+      "category": null
+    },
+    {
+      "date": "2026-07-03",
+      "description": "ELECTRIC IRELAND DD",
+      "amount": -85.0,
+      "balance": 1651.88,
+      "category": null
+    },
+    {
+      "date": "2026-07-04",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 1611.88,
+      "category": null
+    },
+    {
+      "date": "2026-07-05",
+      "description": "LOAN REPAYMENT NORTHWIND BANK",
+      "amount": -285.0,
+      "balance": 1326.88,
+      "category": null
+    },
+    {
+      "date": "2026-07-06",
+      "description": "UBER EATS",
+      "amount": -32.99,
+      "balance": 1293.89,
+      "category": null
+    },
+    {
+      "date": "2026-07-07",
+      "description": "SPOTIFY",
+      "amount": -11.99,
+      "balance": 1281.9,
+      "category": null
+    },
+    {
+      "date": "2026-07-08",
+      "description": "UBER EATS",
+      "amount": -37.65,
+      "balance": 1244.25,
+      "category": null
+    },
+    {
+      "date": "2026-07-09",
+      "description": "TESCO",
+      "amount": -63.93,
+      "balance": 1180.32,
+      "category": null
+    },
+    {
+      "date": "2026-07-09",
+      "description": "AMAZON.IE",
+      "amount": -42.92,
+      "balance": 1137.4,
+      "category": null
+    },
+    {
+      "date": "2026-07-10",
+      "description": "EIR BROADBAND",
+      "amount": -55.0,
+      "balance": 1082.4,
+      "category": null
+    },
+    {
+      "date": "2026-07-12",
+      "description": "FLYEFIT GYM",
+      "amount": -39.99,
+      "balance": 1042.41,
+      "category": null
+    },
+    {
+      "date": "2026-07-12",
+      "description": "THE BRAZEN HEAD PUB",
+      "amount": -30.58,
+      "balance": 1011.83,
+      "category": null
+    },
+    {
+      "date": "2026-07-13",
+      "description": "AMAZON.IE",
+      "amount": -51.54,
+      "balance": 960.29,
+      "category": null
+    },
+    {
+      "date": "2026-07-14",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 920.29,
+      "category": null
+    },
+    {
+      "date": "2026-07-15",
+      "description": "THREE MOBILE",
+      "amount": -30.0,
+      "balance": 890.29,
+      "category": null
+    },
+    {
+      "date": "2026-07-15",
+      "description": "UBER EATS",
+      "amount": -29.23,
+      "balance": 861.06,
+      "category": null
+    },
+    {
+      "date": "2026-07-18",
+      "description": "TESCO",
+      "amount": -78.62,
+      "balance": 782.44,
+      "category": null
+    },
+    {
+      "date": "2026-07-18",
+      "description": "DELIVEROO",
+      "amount": -40.62,
+      "balance": 741.82,
+      "category": null
+    },
+    {
+      "date": "2026-07-20",
+      "description": "CREDIT CARD PAYMENT NORTHWIND VISA",
+      "amount": -120.0,
+      "balance": 621.82,
+      "category": null
+    },
+    {
+      "date": "2026-07-21",
+      "description": "TESCO",
+      "amount": -56.0,
+      "balance": 565.82,
+      "category": null
+    },
+    {
+      "date": "2026-07-23",
+      "description": "UBER EATS",
+      "amount": -32.91,
+      "balance": 532.91,
+      "category": null
+    },
+    {
+      "date": "2026-07-24",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 492.91,
+      "category": null
+    },
+    {
+      "date": "2026-07-24",
+      "description": "TESCO",
+      "amount": -82.07,
+      "balance": 410.84,
+      "category": null
+    },
+    {
+      "date": "2026-07-25",
+      "description": "SALARY ACME ANALYTICS LTD",
+      "amount": 3150.0,
+      "balance": 3560.84,
+      "category": null
+    },
+    {
+      "date": "2026-07-25",
+      "description": "ZARA",
+      "amount": -36.13,
+      "balance": 3524.71,
+      "category": null
+    },
+    {
+      "date": "2026-07-28",
+      "description": "DELIVEROO",
+      "amount": -41.73,
+      "balance": 3482.98,
+      "category": null
+    },
+    {
+      "date": "2026-08-01",
+      "description": "RENT - HARBOUR PROPERTY MGMT",
+      "amount": -1350.0,
+      "balance": 2132.98,
+      "category": null
+    },
+    {
+      "date": "2026-08-02",
+      "description": "NETFLIX.COM",
+      "amount": -15.99,
+      "balance": 2116.99,
+      "category": null
+    },
+    {
+      "date": "2026-08-03",
+      "description": "ELECTRIC IRELAND DD",
+      "amount": -85.0,
+      "balance": 2031.99,
+      "category": null
+    },
+    {
+      "date": "2026-08-04",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 1991.99,
+      "category": null
+    },
+    {
+      "date": "2026-08-04",
+      "description": "LIDL",
+      "amount": -58.15,
+      "balance": 1933.84,
+      "category": null
+    },
+    {
+      "date": "2026-08-05",
+      "description": "LOAN REPAYMENT NORTHWIND BANK",
+      "amount": -285.0,
+      "balance": 1648.84,
+      "category": null
+    },
+    {
+      "date": "2026-08-07",
+      "description": "SPOTIFY",
+      "amount": -11.99,
+      "balance": 1636.85,
+      "category": null
+    },
+    {
+      "date": "2026-08-08",
+      "description": "LIDL",
+      "amount": -94.41,
+      "balance": 1542.44,
+      "category": null
+    },
+    {
+      "date": "2026-08-10",
+      "description": "EIR BROADBAND",
+      "amount": -55.0,
+      "balance": 1487.44,
+      "category": null
+    },
+    {
+      "date": "2026-08-10",
+      "description": "ALDI",
+      "amount": -79.74,
+      "balance": 1407.7,
+      "category": null
+    },
+    {
+      "date": "2026-08-12",
+      "description": "FLYEFIT GYM",
+      "amount": -39.99,
+      "balance": 1367.71,
+      "category": null
+    },
+    {
+      "date": "2026-08-12",
+      "description": "DELIVEROO",
+      "amount": -39.42,
+      "balance": 1328.29,
+      "category": null
+    },
+    {
+      "date": "2026-08-13",
+      "description": "JUST EAT",
+      "amount": -33.79,
+      "balance": 1294.5,
+      "category": null
+    },
+    {
+      "date": "2026-08-13",
+      "description": "ZARA",
+      "amount": -89.37,
+      "balance": 1205.13,
+      "category": null
+    },
+    {
+      "date": "2026-08-14",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 1165.13,
+      "category": null
+    },
+    {
+      "date": "2026-08-15",
+      "description": "THREE MOBILE",
+      "amount": -30.0,
+      "balance": 1135.13,
+      "category": null
+    },
+    {
+      "date": "2026-08-20",
+      "description": "CREDIT CARD PAYMENT NORTHWIND VISA",
+      "amount": -120.0,
+      "balance": 1015.13,
+      "category": null
+    },
+    {
+      "date": "2026-08-20",
+      "description": "UBER EATS",
+      "amount": -26.45,
+      "balance": 988.68,
+      "category": null
+    },
+    {
+      "date": "2026-08-21",
+      "description": "PENNEYS",
+      "amount": -63.42,
+      "balance": 925.26,
+      "category": null
+    },
+    {
+      "date": "2026-08-22",
+      "description": "TICKETMASTER",
+      "amount": -53.71,
+      "balance": 871.55,
+      "category": null
+    },
+    {
+      "date": "2026-08-23",
+      "description": "TESCO",
+      "amount": -56.83,
+      "balance": 814.72,
+      "category": null
+    },
+    {
+      "date": "2026-08-23",
+      "description": "UBER EATS",
+      "amount": -38.85,
+      "balance": 775.87,
+      "category": null
+    },
+    {
+      "date": "2026-08-24",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 735.87,
+      "category": null
+    },
+    {
+      "date": "2026-08-24",
+      "description": "AMAZON.IE",
+      "amount": -39.8,
+      "balance": 696.07,
+      "category": null
+    },
+    {
+      "date": "2026-08-25",
+      "description": "SALARY ACME ANALYTICS LTD",
+      "amount": 3150.0,
+      "balance": 3846.07,
+      "category": null
+    },
+    {
+      "date": "2026-08-25",
+      "description": "CINEWORLD",
+      "amount": -29.16,
+      "balance": 3816.91,
+      "category": null
+    },
+    {
+      "date": "2026-08-27",
+      "description": "JUST EAT",
+      "amount": -26.23,
+      "balance": 3790.68,
+      "category": null
+    },
+    {
+      "date": "2026-08-28",
+      "description": "LIDL",
+      "amount": -78.09,
+      "balance": 3712.59,
+      "category": null
+    },
+    {
+      "date": "2026-08-28",
+      "description": "DELIVEROO",
+      "amount": -44.53,
+      "balance": 3668.06,
+      "category": null
+    },
+    {
+      "date": "2026-09-01",
+      "description": "RENT - HARBOUR PROPERTY MGMT",
+      "amount": -1350.0,
+      "balance": 2318.06,
+      "category": null
+    },
+    {
+      "date": "2026-09-02",
+      "description": "NETFLIX.COM",
+      "amount": -15.99,
+      "balance": 2302.07,
+      "category": null
+    },
+    {
+      "date": "2026-09-02",
+      "description": "LIDL",
+      "amount": -71.05,
+      "balance": 2231.02,
+      "category": null
+    },
+    {
+      "date": "2026-09-03",
+      "description": "ELECTRIC IRELAND DD",
+      "amount": -85.0,
+      "balance": 2146.02,
+      "category": null
+    },
+    {
+      "date": "2026-09-03",
+      "description": "TESCO",
+      "amount": -91.53,
+      "balance": 2054.49,
+      "category": null
+    },
+    {
+      "date": "2026-09-03",
+      "description": "DELIVEROO",
+      "amount": -44.39,
+      "balance": 2010.1,
+      "category": null
+    },
+    {
+      "date": "2026-09-04",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 1970.1,
+      "category": null
+    },
+    {
+      "date": "2026-09-04",
+      "description": "THE BRAZEN HEAD PUB",
+      "amount": -55.39,
+      "balance": 1914.71,
+      "category": null
+    },
+    {
+      "date": "2026-09-05",
+      "description": "LOAN REPAYMENT NORTHWIND BANK",
+      "amount": -285.0,
+      "balance": 1629.71,
+      "category": null
+    },
+    {
+      "date": "2026-09-05",
+      "description": "DELIVEROO",
+      "amount": -41.37,
+      "balance": 1588.34,
+      "category": null
+    },
+    {
+      "date": "2026-09-05",
+      "description": "UBER EATS",
+      "amount": -26.16,
+      "balance": 1562.18,
+      "category": null
+    },
+    {
+      "date": "2026-09-07",
+      "description": "SPOTIFY",
+      "amount": -11.99,
+      "balance": 1550.19,
+      "category": null
+    },
+    {
+      "date": "2026-09-08",
+      "description": "DELIVEROO",
+      "amount": -35.25,
+      "balance": 1514.94,
+      "category": null
+    },
+    {
+      "date": "2026-09-10",
+      "description": "EIR BROADBAND",
+      "amount": -55.0,
+      "balance": 1459.94,
+      "category": null
+    },
+    {
+      "date": "2026-09-12",
+      "description": "FLYEFIT GYM",
+      "amount": -39.99,
+      "balance": 1419.95,
+      "category": null
+    },
+    {
+      "date": "2026-09-13",
+      "description": "ZARA",
+      "amount": -65.75,
+      "balance": 1354.2,
+      "category": null
+    },
+    {
+      "date": "2026-09-14",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 1314.2,
+      "category": null
+    },
+    {
+      "date": "2026-09-14",
+      "description": "UBER EATS",
+      "amount": -32.38,
+      "balance": 1281.82,
+      "category": null
+    },
+    {
+      "date": "2026-09-15",
+      "description": "THREE MOBILE",
+      "amount": -30.0,
+      "balance": 1251.82,
+      "category": null
+    },
+    {
+      "date": "2026-09-15",
+      "description": "PENNEYS",
+      "amount": -45.08,
+      "balance": 1206.74,
+      "category": null
+    },
+    {
+      "date": "2026-09-18",
+      "description": "JUST EAT",
+      "amount": -41.42,
+      "balance": 1165.32,
+      "category": null
+    },
+    {
+      "date": "2026-09-18",
+      "description": "CINEWORLD",
+      "amount": -47.21,
+      "balance": 1118.11,
+      "category": null
+    },
+    {
+      "date": "2026-09-19",
+      "description": "ALDI",
+      "amount": -67.59,
+      "balance": 1050.52,
+      "category": null
+    },
+    {
+      "date": "2026-09-20",
+      "description": "CREDIT CARD PAYMENT NORTHWIND VISA",
+      "amount": -120.0,
+      "balance": 930.52,
+      "category": null
+    },
+    {
+      "date": "2026-09-21",
+      "description": "LIDL",
+      "amount": -70.83,
+      "balance": 859.69,
+      "category": null
+    },
+    {
+      "date": "2026-09-21",
+      "description": "LIDL",
+      "amount": -60.71,
+      "balance": 798.98,
+      "category": null
+    },
+    {
+      "date": "2026-09-22",
+      "description": "ZARA",
+      "amount": -65.78,
+      "balance": 733.2,
+      "category": null
+    },
+    {
+      "date": "2026-09-24",
+      "description": "LEAP CARD TOP-UP",
+      "amount": -40.0,
+      "balance": 693.2,
+      "category": null
+    },
+    {
+      "date": "2026-09-25",
+      "description": "SALARY ACME ANALYTICS LTD",
+      "amount": 3150.0,
+      "balance": 3843.2,
+      "category": null
+    }
+  ],
+  "payslips": [
+    {
+      "employee": "Alex Murphy",
+      "employer": "Acme Analytics Ltd",
+      "pay_date": "2026-09-25",
+      "gross_pay": 4200.0,
+      "deductions": {
+        "Income Tax (PAYE)": 640.0,
+        "PRSI": 168.0,
+        "USC": 142.0,
+        "Pension Contribution": 100.0
+      },
+      "net_pay": 3150.0
+    }
+  ],
+  "debts": [
+    {
+      "name": "Northwind Bank Car Loan",
+      "kind": "loan",
+      "balance": 7800.0,
+      "annual_interest_rate": 8.9,
+      "monthly_payment": 285.0,
+      "remaining_term_months": 31
+    },
+    {
+      "name": "Northwind Bank Visa Credit Card",
+      "kind": "credit_card",
+      "balance": 2100.0,
+      "annual_interest_rate": 21.9,
+      "monthly_payment": 120.0,
+      "remaining_term_months": null
+    }
+  ],
+  "sources": [
+    {
+      "filename": "bank_statement_jul-sep_2026.pdf",
+      "document_type": "bank_statement",
+      "warnings": []
+    },
+    {
+      "filename": "payslip_sep_2026.pdf",
+      "document_type": "payslip",
+      "warnings": []
+    },
+    {
+      "filename": "loan_statement_sep_2026.xlsx",
+      "document_type": "loan_statement",
+      "warnings": []
+    }
+  ]
+}

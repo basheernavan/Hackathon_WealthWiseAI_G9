@@ -1,0 +1,179 @@
+{
+  "transaction_categories": [
+    "housing",
+    "subscriptions",
+    "groceries",
+    "entertainment",
+    "utilities",
+    "transport",
+    "debt_repayment",
+    "takeaway",
+    "subscriptions",
+    "takeaway",
+    "groceries",
+    "shopping",
+    "utilities",
+    "subscriptions",
+    "entertainment",
+    "shopping",
+    "transport",
+    "utilities",
+    "takeaway",
+    "groceries",
+    "takeaway",
+    "debt_repayment",
+    "groceries",
+    "takeaway",
+    "transport",
+    "groceries",
+    "income",
+    "shopping",
+    "takeaway",
+    "housing",
+    "subscriptions",
+    "utilities",
+    "transport",
+    "groceries",
+    "debt_repayment",
+    "subscriptions",
+    "groceries",
+    "utilities",
+    "groceries",
+    "subscriptions",
+    "takeaway",
+    "takeaway",
+    "shopping",
+    "transport",
+    "utilities",
+    "debt_repayment",
+    "takeaway",
+    "shopping",
+    "entertainment",
+    "groceries",
+    "takeaway",
+    "transport",
+    "shopping",
+    "income",
+    "entertainment",
+    "takeaway",
+    "groceries",
+    "takeaway",
+    "housing",
+    "subscriptions",
+    "groceries",
+    "utilities",
+    "groceries",
+    "takeaway",
+    "transport",
+    "entertainment",
+    "debt_repayment",
+    "takeaway",
+    "takeaway",
+    "subscriptions",
+    "takeaway",
+    "utilities",
+    "subscriptions",
+    "shopping",
+    "transport",
+    "takeaway",
+    "utilities",
+    "shopping",
+    "takeaway",
+    "entertainment",
+    "groceries",
+    "debt_repayment",
+    "groceries",
+    "groceries",
+    "shopping",
+    "transport",
+    "income"
+  ],
+  "metrics": {
+    "months_covered": 3,
+    "monthly_income": 3150.0,
+    "monthly_spending": 2935.6,
+    "monthly_surplus": 214.4,
+    "spending_by_category": {
+      "debt_repayment": 405.0,
+      "entertainment": 84.81,
+      "groceries": 356.1,
+      "housing": 1350.0,
+      "shopping": 166.6,
+      "subscriptions": 67.97,
+      "takeaway": 215.12,
+      "transport": 120.0,
+      "utilities": 170.0
+    },
+    "savings_rate": 0.0681,
+    "debt_to_income": 0.1286,
+    "total_debt": 9900.0,
+    "current_balance": 3843.2,
+    "emergency_fund_months": 1.31,
+    "discretionary_share": 0.1821
+  },
+  "health_score": {
+    "score": 67,
+    "band": "fair",
+    "components": [
+      {
+        "name": "savings_rate",
+        "value": 0.0681,
+        "points": 10.21,
+        "max_points": 30
+      },
+      {
+        "name": "debt_to_income",
+        "value": 0.1286,
+        "points": 27.86,
+        "max_points": 30
+      },
+      {
+        "name": "emergency_fund",
+        "value": 1.3092,
+        "points": 8.73,
+        "max_points": 20
+      },
+      {
+        "name": "discretionary_share",
+        "value": 0.1821,
+        "points": 20.0,
+        "max_points": 20
+      }
+    ]
+  },
+  "subscriptions": [
+    {
+      "name": "FLYEFIT GYM",
+      "monthly_amount": 39.99,
+      "months_seen": 3
+    },
+    {
+      "name": "NETFLIX.COM",
+      "monthly_amount": 15.99,
+      "months_seen": 3
+    },
+    {
+      "name": "SPOTIFY",
+      "monthly_amount": 11.99,
+      "months_seen": 3
+    }
+  ],
+  "identified_cuts": 107.56,
+  "debt_plan": {
+    "strategy": "avalanche",
+    "payoff_order": [
+      "Northwind Bank Visa Credit Card",
+      "Northwind Bank Car Loan"
+    ],
+    "extra_monthly_payment": 160.98,
+    "months_to_debt_free_current": 28,
+    "months_to_debt_free_with_extra": 20,
+    "months_saved": 8,
+    "interest_saved": 513.39
+  },
+  "savings_plan": {
+    "monthly_amount": 160.98,
+    "target_amount": 8806.8,
+    "months_to_target": 31
+  }
+}
