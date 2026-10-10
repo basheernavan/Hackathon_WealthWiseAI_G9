@@ -71,8 +71,8 @@ git push
 gh pr ready
 ```
 
-1. Post the PR link in the team chat and ask for a quick look.
-2. Once someone approves, **or** after 15 minutes with no reply: `gh pr merge --squash --delete-branch`.
+1. Post the PR link in the team chat and tag Basheer (@basheernavan).
+2. Only Basheer can merge into `main` (a GitHub ruleset blocks everyone else). He squash-merges and deletes the branch. If the PR shows conflicts, fix them on your branch (`git pull origin main`, resolve, `pytest`, `git push`) and tag him again.
 3. The issue closes by itself (thanks to `Closes #<N>`). Pick the next task.
 
 Changes to `contracts.py` are the only exception: they need a 👍 from two other active people.
@@ -121,6 +121,7 @@ Continue from **Next** in the handoff comment, then carry on from step 4.
 
 | Problem | Do this |
 | --- | --- |
+| "Merging is blocked" on your PR | Expected: only Basheer can merge. Tag him in the chat. |
 | Merge conflict | Run `/mattpocock-skills:resolving-merge-conflicts`, or ask in the chat. |
 | `pytest` fails on `main` | Post in the chat at once. Fixing `main` comes before any task. |
 | A bug outside your task | `gh issue create --label needs-triage --title "..." --body "..."`, then carry on. |
