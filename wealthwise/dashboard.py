@@ -130,17 +130,38 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
                 height: 100%;
                 border-radius: 999px;
             }
+            /* Stand-alone figures: light teal tile with a brand accent, dark text for contrast. */
             [data-testid="stMetric"] {
-                background: #FFFFFF;
-                border-radius: 0.7rem;
-                padding: 0.4rem 0.2rem;
+                background: #F0FAF9;
+                border: 1px solid #CDEDEA;
+                border-left: 4px solid #0EA5A0;
+                border-radius: 0.9rem;
+                padding: 0.85rem 1.1rem;
             }
-            [data-testid="stMetricLabel"] {
-                color: #5B6B82;
+            /* Figures already inside a card sit flat on it. */
+            [class*="st-key-overview-"] [data-testid="stMetric"],
+            [class*="st-key-recommendation-"] [data-testid="stMetric"] {
+                background: transparent;
+                border: none;
+                padding: 0;
+            }
+            [data-testid="stMetricLabel"], [data-testid="stMetricLabel"] p {
+                color: #5B6B82 !important;
+                font-size: 0.88rem;
+                font-weight: 600;
             }
             [data-testid="stMetricValue"] {
-                color: #0B2D5B;
+                color: #0B2D5B !important;
                 font-weight: 700;
+                font-variant-numeric: tabular-nums;
+            }
+            .st-key-debt-interest [data-testid="stMetric"] {
+                background: #F0FDF4;
+                border-color: #BBF7D0;
+                border-left-color: #22C55E;
+            }
+            .st-key-debt-interest [data-testid="stMetricValue"] {
+                color: #166534 !important;
             }
             [class*="st-key-overview-"] {
                 background: #FFFFFF;
@@ -543,11 +564,13 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
                 and plan.months_to_debt_free_with_extra < MAX_MONTHS
             )
             if projection_complete:
-                st.info(
+                st.success(
                     f"Debt-free in {plan.months_to_debt_free_with_extra} months "
-                    f"({plan.months_saved} months earlier)"
+                    f"({plan.months_saved} months earlier)",
+                    icon=":material/event_available:",
                 )
-                st.metric("Interest saved", format_eur(plan.interest_saved))
+                with st.container(key="debt-interest"):
+                    st.metric("Interest saved", format_eur(plan.interest_saved))
             else:
                 st.info(
                     f"Payoff was not reached within {MAX_MONTHS} months; "

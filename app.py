@@ -43,6 +43,11 @@ ROADMAP = [
     ("monitoring", "Investment Planning", "Personalised investment insights."),
     ("receipt_long", "Tax Planning Support", "Guidance for better tax decisions."),
 ]
+CHAT_SUGGESTIONS = [
+    "Where does most of my money go?",
+    "How can I save €100 a month?",
+    "When will I be debt-free?",
+]
 
 
 def run_pipeline(documents: list[UploadedDocument]) -> None:
@@ -88,8 +93,79 @@ st.markdown(
         [data-testid="stHeader"] {
             background: transparent;
         }
-        [data-testid="stBottom"] {
-            position: static !important;
+        /* Ask WealthWise */
+        .st-key-chat-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 1rem;
+            padding: 1.1rem 1.3rem 1.3rem;
+            box-shadow: 0 6px 20px rgba(11, 45, 91, 0.06);
+        }
+        [data-testid="stChatMessage"] {
+            background: #F5F7FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-right: 3rem;
+        }
+        [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+            background: #E6F2FF;
+            margin: 0 0 0 3rem;
+        }
+        [data-testid="stChatMessageAvatarUser"] {
+            background: #0B2D5B;
+            color: #FFFFFF;
+        }
+        [data-testid="stChatMessage"] p {
+            color: #0B2D5B;
+        }
+        [class*="st-key-suggest-"] button {
+            background: #F0FAF9 !important;
+            border: 1px solid #CDEDEA !important;
+            color: #0B2D5B !important;
+            font-weight: 500 !important;
+            font-size: 0.88rem !important;
+            min-height: 2.6rem;
+        }
+        [class*="st-key-suggest-"] button:hover {
+            border-color: #0EA5A0 !important;
+            color: #0E7C78 !important;
+        }
+        [data-testid="stChatInput"] {
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1 !important;
+            border-radius: 1rem !important;
+            box-shadow: 0 2px 8px rgba(11, 45, 91, 0.05);
+        }
+        [data-testid="stChatInput"]:focus-within {
+            border-color: #0EA5A0 !important;
+            box-shadow: 0 0 0 3px rgba(14, 165, 160, 0.15);
+        }
+        [data-testid="stChatInput"] > div, [data-testid="stChatInput"] textarea {
+            background: #FFFFFF !important;
+            color: #0B2D5B !important;
+        }
+        [data-testid="stChatInput"] textarea::placeholder {
+            color: #8492A6 !important;
+        }
+        [data-testid="stChatInputSubmitButton"] {
+            background: #0EA5A0 !important;
+            color: #FFFFFF !important;
+            border-radius: 0.7rem !important;
+        }
+        [data-testid="stChatInputSubmitButton"]:disabled {
+            background: #E2E8F0 !important;
+            color: #8492A6 !important;
+        }
+
+        /* Alerts and tables blend with the light cards. */
+        [data-testid="stAlertContainer"] {
+            border-radius: 0.9rem;
+        }
+        [data-testid="stDataFrame"], [data-testid="stSelectbox"] > div > div {
+            border-radius: 0.75rem;
+        }
+        hr {
+            border-color: #E2E8F0 !important;
         }
         h1, h2, h3 {
             color: #0B2D5B !important;
@@ -461,20 +537,38 @@ if has_report:
         st.session_state.chat_profile_key = profile_key
         st.session_state.chat_messages = []
         st.session_state.chat_context = {"preferences": []}
-    st.caption(
-        "When AI is enabled, your question and relevant document excerpts may be sent to OpenRouter. "
-        "Financial figures are calculated from your data."
+    chat_card = st.container(key="chat-card")
+    intro_col, clear_col = chat_card.columns([5, 1], vertical_alignment="center")
+    intro_col.caption(
+        ":material/lock: When AI is enabled, your question and relevant document excerpts may be sent to "
+        "OpenRouter. Financial figures are calculated from your data."
     )
-    if st.button("Clear chat", key="clear_chat"):
+    if clear_col.button("Clear chat", key="clear_chat", icon=":material/restart_alt:", type="tertiary"):
         st.session_state.chat_messages = []
         st.session_state.chat_context = {}
         st.rerun()
 
-    for message in st.session_state.chat_messages:
-        with st.chat_message(message["role"], avatar=ROBOT if message["role"] == "assistant" else None):
-            st.markdown(message["content"])
-
-    question = st.chat_input("Ask WealthWise about your finances")
+    messages_area = chat_card.container()
+    with chat_card:
+        # Inside a container the input sits in the card instead of pinned to the window bottom.
+        question = st.chat_input("Ask WealthWise about your finances") or st.session_state.pop("chat_suggestion", None)
+    with messages_area:
+        if not st.session_state.chat_messages and not question:
+            with st.chat_message("assistant", avatar=ROBOT):
+                st.markdown(
+                    "Hi! I've read your documents. Ask me about your spending, debts or savings, "
+                    "or try one of these:"
+                )
+            for column, suggestion in zip(st.columns(len(CHAT_SUGGESTIONS)), CHAT_SUGGESTIONS):
+                column.button(
+                    suggestion,
+                    key=f"suggest-{suggestion}",
+                    on_click=lambda text=suggestion: st.session_state.update(chat_suggestion=text),
+                    width="stretch",
+                )
+        for message in st.session_state.chat_messages:
+            with st.chat_message(message["role"], avatar=ROBOT if message["role"] == "assistant" else None):
+                st.markdown(message["content"])
     if question:
         st.session_state.chat_messages.append({"role": "user", "content": question})
         if re.search(
@@ -485,10 +579,10 @@ if has_report:
             preferences = st.session_state.chat_context.setdefault("preferences", [])
             if "avoid_takeaway_reduction" not in preferences:
                 preferences.append("avoid_takeaway_reduction")
-        with st.chat_message("user"):
+        with messages_area.chat_message("user"):
             st.markdown(question)
         try:
-            with st.chat_message("assistant", avatar=ROBOT):
+            with messages_area.chat_message("assistant", avatar=ROBOT):
                 with st.spinner("Thinking..."):
                     answer = answer_question(
                         profile,
@@ -500,9 +594,9 @@ if has_report:
                 st.markdown(answer)
             st.session_state.chat_messages.append({"role": "assistant", "content": answer})
         except NotImplementedError:
-            st.info("Ask WealthWise is coming soon")
+            messages_area.info("Ask WealthWise is coming soon")
         except Exception as error:
-            st.error(f"Ask WealthWise couldn't answer this just now: {error}")
+            messages_area.error(f"Ask WealthWise couldn't answer this just now: {error}")
 
 st.divider()
 st.caption(

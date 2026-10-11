@@ -168,7 +168,7 @@ def test_report_explains_when_spending_categories_and_subscriptions_are_empty(mo
 def test_render_report_shows_avalanche_debt_plan_summary(mock_report):
     at = run_report(mock_report)
     visible_text = " ".join(
-        element.value for element in (*at.markdown, *at.caption, *at.info, *at.metric)
+        element.value for element in (*at.markdown, *at.caption, *at.info, *at.success, *at.metric)
     )
 
     assert "Debt repayment plan" in [heading.value for heading in at.subheader]

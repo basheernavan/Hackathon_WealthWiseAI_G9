@@ -2,6 +2,10 @@
 # Public demo: keep uploads small (MB per file).
 maxUploadSize = 5
 
+[client]
+# Hide the developer "Deploy" menu in the demo.
+toolbarMode = "minimal"
+
 [theme]
 # Brand sheet: Deep Blue text, Teal accent, Soft Grey background, Light Blue panels, Poppins.
 # Matches the CSS in app.py and wealthwise/dashboard.py. Falls back to sans-serif offline.
