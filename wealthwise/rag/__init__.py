@@ -738,7 +738,11 @@ def _is_open_ended_savings_question(question: str) -> bool:
 
 
 def _trace_inputs(inputs: dict) -> dict:
-    """LangSmith gets the question only; the profile and report stay out of the trace's inputs."""
+    """Keep the profile and report out of this run's inputs.
+
+    The nested model call is still traced with the full prompt, report data included, so tracing is for local and
+    eval runs only: never set LANGSMITH_API_KEY on the public deployment.
+    """
     return {"question": inputs["question"]}
 
 
