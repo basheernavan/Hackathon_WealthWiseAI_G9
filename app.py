@@ -13,6 +13,7 @@ from wealthwise.rag import answer_question
 
 SAMPLES = Path(__file__).resolve().parent / "samples"
 SAMPLE_FILES = ["bank_statement_jul-sep_2026.pdf", "payslip_sep_2026.pdf", "loan_statement_sep_2026.xlsx"]
+MAX_FILES = 5  # per-file size limit is server.maxUploadSize in .streamlit/config.toml
 
 
 def run_pipeline(documents: list[UploadedDocument]) -> None:
@@ -104,16 +105,23 @@ st.markdown(
 )
 st.title("WealthWise")
 st.caption("Personalised financial guidance from your own documents. Not financial advice.")
+st.info(
+    "Public demo: please choose **Use sample documents**, or upload fictional files. "
+    "Don't upload real financial records."
+)
 
 uploads = st.file_uploader(
-    "Upload your bank statement, payslip and loan statement",
+    f"Upload your bank statement, payslip and loan statement (up to {MAX_FILES} files)",
     type=["pdf", "csv", "xlsx"],
     accept_multiple_files=True,
 )
 analyse_col, sample_col = st.columns(2)
 documents: list[UploadedDocument] | None = None
 if analyse_col.button("Analyse", type="primary", disabled=not uploads):
-    documents = [UploadedDocument(filename=f.name, content=f.getvalue()) for f in uploads]
+    if len(uploads) > MAX_FILES:
+        st.error(f"Please upload at most {MAX_FILES} files.")
+    else:
+        documents = [UploadedDocument(filename=f.name, content=f.getvalue()) for f in uploads]
 if sample_col.button("Use sample documents"):
     documents = [UploadedDocument(filename=n, content=(SAMPLES / n).read_bytes()) for n in SAMPLE_FILES]
 

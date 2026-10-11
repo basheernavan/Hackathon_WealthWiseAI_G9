@@ -1,0 +1,3 @@
+[server]
+# Public demo: keep uploads small (MB per file).
+maxUploadSize = 5
