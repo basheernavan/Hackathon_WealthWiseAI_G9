@@ -24,6 +24,7 @@ python scripts/generate_samples.py   # only if the generator changes
 - `wealthwise/llm.py`: the only place that creates the LLM client (OpenRouter).
 - `tests/conftest.py`: fixtures from `samples/` so each task tests in isolation. `tests/test_acceptance.py` skips until a stream is complete.
 - `samples/`: fictional documents and answer keys. Generated; never hand-edit.
+- `test_data/`: hand-made fictional documents in other layouts (text-line PDFs, loan PDF, unsigned CSV), one folder per set. See its README.
 - `docs/adr/`: decisions. Respect them, or flag a conflict explicitly.
 - `documents/`: pitch and background from an earlier plan; the repo wins where they disagree.
 

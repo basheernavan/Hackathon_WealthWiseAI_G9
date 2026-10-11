@@ -15,7 +15,7 @@ copy .env.example .env      # add your OPENROUTER_API_KEY (optional)
 streamlit run app.py
 ```
 
-Try it with the fictional files in [samples/](samples/).
+Try it with the fictional files in [samples/](samples/) or [test_data/](test_data/) (other layouts).
 
 ## For developers
 
