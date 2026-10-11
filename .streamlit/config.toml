@@ -1,3 +1,11 @@
 [server]
 # Public demo: keep uploads small (MB per file).
 maxUploadSize = 5
+
+[theme]
+# Matches the dark CSS in app.py; teal is the one accent colour.
+base = "dark"
+primaryColor = "#14b8a6"
+backgroundColor = "#040b12"
+secondaryBackgroundColor = "#0b1a26"
+textColor = "#edf2f7"

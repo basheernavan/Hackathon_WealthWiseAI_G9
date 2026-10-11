@@ -29,6 +29,13 @@ def test_upload_size_is_limited_in_streamlit_config():
 
     config = tomllib.loads((Path(__file__).resolve().parents[1] / ".streamlit" / "config.toml").read_text())
     assert config["server"]["maxUploadSize"] <= 5
+    assert config["theme"]["primaryColor"]
+
+
+def test_page_ends_with_disclaimer_footer():
+    at = run_app()
+    footer = at.caption[-1].value.lower()
+    assert "hackathon pilot" in footer and "not financial advice" in footer
 
 
 def test_sample_documents_produce_a_report_without_errors(monkeypatch):
