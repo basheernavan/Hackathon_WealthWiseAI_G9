@@ -196,3 +196,9 @@ if "report" in st.session_state:
             st.info("Ask WealthWise is coming soon")
         except Exception as error:
             st.error(f"Ask WealthWise couldn't answer this just now: {error}")
+
+st.divider()
+st.caption(
+    "WealthWise is a hackathon pilot and not financial advice. Figures are calculated from the documents "
+    "you upload; check them against the originals before acting."
+)
