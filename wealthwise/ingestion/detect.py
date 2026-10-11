@@ -31,6 +31,6 @@ def detect_document_type(filename: str, content: bytes) -> DocumentType | None:
             return DocumentType.PAYSLIP
         if re.search(r"\bLOAN\b|\bCREDIT CARD\b", text, re.IGNORECASE) and re.search(r"Interest Rate|\bAPR\b", text):
             return DocumentType.LOAN_STATEMENT
-        if "Statement" in text and "Balance" in text:
+        if "Opening Balance" in text or ("Statement" in text and "Balance" in text):
             return DocumentType.BANK_STATEMENT
     return None
