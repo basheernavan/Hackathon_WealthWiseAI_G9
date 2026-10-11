@@ -3,9 +3,22 @@
 maxUploadSize = 5
 
 [theme]
-# Matches the dark CSS in app.py; teal is the one accent colour.
-base = "dark"
-primaryColor = "#14b8a6"
-backgroundColor = "#040b12"
-secondaryBackgroundColor = "#0b1a26"
-textColor = "#edf2f7"
+# Light, evergreen palette for a calm and readable financial dashboard.
+base = "light"
+primaryColor = "#28734B"
+backgroundColor = "#F6F9F5"
+secondaryBackgroundColor = "#EAF1E9"
+textColor = "#20352A"
+linkColor = "#246B45"
+borderColor = "#D3E0D3"
+showWidgetBorder = true
+baseRadius = "large"
+buttonRadius = "medium"
+greenColor = "#28734B"
+greenBackgroundColor = "#E0EFE3"
+greenTextColor = "#205B3B"
+blueColor = "#397F73"
+yellowColor = "#A67825"
+orangeColor = "#A85E2B"
+redColor = "#AE4843"
+chartCategoricalColors = ["#28734B", "#4D8C68", "#7AA27D", "#B1873F", "#5B8390"]
