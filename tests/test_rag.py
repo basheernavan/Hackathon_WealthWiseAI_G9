@@ -668,3 +668,35 @@ def test_retrieval_and_model_failures_return_a_friendly_apology(
     )
 
     assert answer == "Sorry, I couldn't answer that question from your documents. Please try again."
+
+def test_conversation_merchants_reads_merchants_from_earlier_questions(sample_profile):
+    history = [
+        {"role": "user", "content": "How much did I spend at Deliveroo?"},
+        {"role": "assistant", "content": "You spent €287.31 at DELIVEROO."},
+        {"role": "user", "content": "and Just Eat?"},
+    ]
+
+    merchants = rag._conversation_merchants(sample_profile, history, {})
+
+    assert [name.casefold() for name, _ in merchants][:1] == ["deliveroo"]
+
+
+def test_collection_cache_follows_profile_content_not_object_identity(monkeypatch, sample_profile):
+    install_rag_fakes(monkeypatch)
+    created = []
+    monkeypatch.setattr(
+        rag,
+        "chromadb",
+        SimpleNamespace(EphemeralClient=lambda: created.append(1) or FakeChromaClient(FakeCollection([]))),
+        raising=False,
+    )
+
+    first = rag._get_collection(sample_profile)
+    same_content = rag._get_collection(sample_profile.model_copy(deep=True))
+    other_content = rag._get_collection(
+        sample_profile.model_copy(update={"transactions": sample_profile.transactions[:1]})
+    )
+
+    assert same_content is first
+    assert other_content is not first
+    assert len(created) == 2

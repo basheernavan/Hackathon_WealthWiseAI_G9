@@ -1,5 +1,6 @@
 """Task C3: "Ask WealthWise" questions over the user's own data. Spec: docs/specs/03-dashboard-and-rag.md#c3-ask-wealthwise-answer_question"""
 
+import hashlib
 import json
 import re
 from datetime import date
@@ -108,7 +109,8 @@ def _build_documents(profile: FinancialProfile) -> tuple[list[str], list[str]]:
 
 
 def _get_collection(profile: FinancialProfile):
-    profile_id = id(profile)
+    # Keyed on content, not id(): a freed profile's id can be reused by another upload or session.
+    profile_id = hashlib.sha256(profile.model_dump_json().encode("utf-8")).hexdigest()[:32]
     if profile_id in _COLLECTIONS:
         return _COLLECTIONS[profile_id]
 
@@ -424,7 +426,9 @@ def _conversation_merchants(
     for message in history:
         if message.get("role") != "user":
             continue
-        prior_question = _contextualize_merchant_follow_up(profile, message["content"], prior_user_messages)
+        prior_question = _contextualize_merchant_follow_up(
+            profile, message["content"], prior_user_messages, context
+        )
         match = _merchant_transactions(profile, prior_question)
         if match is not None:
             merchant, transactions = match

@@ -40,7 +40,6 @@ LOAN_XLSX = "loan_statement_sep_2026.xlsx"
 MIME = {".pdf": "application/pdf", ".csv": "text/csv", ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
 QUESTION = "How much do I spend on takeaway?"
 TAKEAWAY_ANSWER = "215"  # demo script: "an answer citing about €215/month"
-NO_KEY_ANSWER = "Add an OpenRouter key"  # C3 spec: the reply without a key
 SLOW_SECONDS = 20  # the pitch promises results "within seconds"
 
 PASS, FAIL, WARN, TODO, SKIP = "PASS", "FAIL", "WARN", "NOT BUILT", "SKIP"
@@ -216,17 +215,15 @@ def demo_in_app(run: DryRun, bank_file: str, expected: dict, with_key: bool):
         run.record("page shows score, cuts and interest saved", PASS)
 
     # Step 5: Ask WealthWise
-    at.text_input[0].input(QUESTION).run()
+    at.chat_input[0].set_value(QUESTION).run()
     if at.exception:
         run.record("Ask WealthWise", FAIL, str(at.exception[0].value)[:200])
     elif any("coming soon" in i.value for i in at.info):
         run.record("Ask WealthWise (C3)", TODO, "page says 'coming soon'")
     else:
-        answer = page_text(at).split("Ask a question about your finances")[-1].strip()
-        if with_key:
-            run.expect(f"'{QUESTION}' cites about EUR {TAKEAWAY_ANSWER}/month", TAKEAWAY_ANSWER in answer, answer[:160])
-        else:
-            run.expect("Ask without a key explains how to enable it", NO_KEY_ANSWER in answer, answer[:160])
+        answer = " ".join(md.value for msg in at.chat_message if msg.name == "assistant" for md in msg.markdown)
+        # Spending questions are answered from code, so the figure shows with or without a key (ADR-0001).
+        run.expect(f"'{QUESTION}' cites about EUR {TAKEAWAY_ANSWER}/month", TAKEAWAY_ANSWER in answer, answer[:160])
     return report
 
 
