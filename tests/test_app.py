@@ -236,3 +236,37 @@ def test_document_chips_escape_uploaded_filenames(monkeypatch, sample_profile):
 
     chips = next(element.value for element in at.markdown if element.value.startswith('<span class="ww-chip"'))
     assert "<img" not in chips and "&lt;img" in chips
+
+
+def test_failed_reanalysis_shows_error_instead_of_crashing(monkeypatch):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    at = run_app()
+    next(b for b in at.button if b.label == "Use sample documents").click().run()
+    assert "report" in at.session_state
+
+    import wealthwise.ingestion as ingestion
+
+    def broken(documents):
+        raise ValueError("unreadable file")
+
+    monkeypatch.setattr(ingestion, "load_profile", broken)
+    next(b for b in at.button if b.label == "Use sample documents").click().run()
+
+    assert not at.exception
+    assert any("Could not analyse" in error.value for error in at.error)
+
+
+def test_sidebar_has_no_debt_link_without_a_debt_plan(monkeypatch, sample_profile):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    report = Report.model_validate_json(
+        (Path(__file__).resolve().parents[1] / "samples" / "mock_report.json").read_text(encoding="utf-8")
+    ).model_copy(update={"debt_plan": None})
+    at = AppTest.from_file("../app.py", default_timeout=120).run()
+    at.session_state["profile"] = sample_profile
+    at.session_state["report"] = report
+    at.session_state["demo"] = True
+    at.run()
+
+    sidebar = " ".join(element.value for element in at.sidebar.markdown)
+    assert 'href="#dashboard"' in sidebar
+    assert 'href="#debt"' not in sidebar

@@ -259,7 +259,7 @@ st.markdown(
             border-radius: 0.6rem;
             margin-bottom: 0.2rem;
         }
-        .ww-side a:hover, .ww-side a:first-child {
+        .ww-side a:hover {
             background: #E6F2FF;
         }
     </style>
@@ -296,8 +296,9 @@ if has_report:
             '<a href="#dashboard">Dashboard</a>'
             '<a href="#spending">Spending</a>'
             '<a href="#recommendations">Savings</a>'
-            '<a href="#debt">Debt</a>'
-            '<a href="#ask-wealthwise">Ask WealthWise</a>'
+            # the "debt" anchor only exists when the report has a debt plan
+            + ('<a href="#debt">Debt</a>' if st.session_state.report.debt_plan is not None else "")
+            + '<a href="#ask-wealthwise">Ask WealthWise</a>'
             '<a href="#upload">Upload Documents</a>'
             "</nav>",
             unsafe_allow_html=True,
@@ -410,6 +411,7 @@ if documents:
             run_pipeline(documents)
     except Exception as e:
         st.error(f"Could not analyse these documents: {e}")
+        has_report = False  # the old report was cleared above
     else:
         st.session_state.show_dashboard = True
         st.rerun()  # redraw with the dashboard layout (sidebar, report nav)
