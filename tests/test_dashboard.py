@@ -32,7 +32,7 @@ def run_report(report, profile=None):
             profile_setup + f"render_report(report{profile_argument})",
         )
     )
-    return AppTest.from_string(script).run()
+    return AppTest.from_string(script).run(timeout=10)
 
 
 def test_format_eur_shows_euros_with_two_decimal_places():
