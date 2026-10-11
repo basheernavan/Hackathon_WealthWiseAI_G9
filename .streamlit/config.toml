@@ -3,9 +3,10 @@
 maxUploadSize = 5
 
 [theme]
-# Matches the dark CSS in app.py; teal is the one accent colour.
-base = "dark"
-primaryColor = "#14b8a6"
-backgroundColor = "#040b12"
-secondaryBackgroundColor = "#0b1a26"
-textColor = "#edf2f7"
+# Brand colours from the pitch deck (documents/WealthWise_Heading_Robots.pptx); matches the CSS in app.py.
+base = "light"
+primaryColor = "#087D99"
+backgroundColor = "#EAF4FC"
+secondaryBackgroundColor = "#D0E7F5"
+textColor = "#15334C"
+font = "sans serif"

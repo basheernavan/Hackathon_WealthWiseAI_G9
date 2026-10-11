@@ -12,6 +12,7 @@ from wealthwise.ingestion import load_profile
 from wealthwise.rag import answer_question
 
 SAMPLES = Path(__file__).resolve().parent / "samples"
+ROBOT = str(Path(__file__).resolve().parent / "assets" / "wealthwise_robot.png")  # mascot from the pitch deck
 SAMPLE_FILES = ["bank_statement_jul-sep_2026.pdf", "payslip_sep_2026.pdf", "loan_statement_sep_2026.xlsx"]
 MAX_FILES = 5  # per-file size limit is server.maxUploadSize in .streamlit/config.toml
 
@@ -32,13 +33,13 @@ def run_pipeline(documents: list[UploadedDocument]) -> None:
     st.session_state.update(profile=profile, report=report, demo=demo)
 
 
-st.set_page_config(page_title="WealthWise", layout="wide")
+st.set_page_config(page_title="WealthWise", page_icon=ROBOT, layout="wide")
 st.markdown(
     """
     <style>
         .stApp {
-            background: #040b12;
-            color: #edf2f7;
+            background: #EAF4FC;
+            color: #15334C;
         }
 
         .main .block-container {
@@ -58,25 +59,26 @@ st.markdown(
             font-weight: 800 !important;
             letter-spacing: -0.06em !important;
             line-height: 1 !important;
-            margin-bottom: 1.5rem !important;
+            color: #15334C !important;
+            margin-bottom: 0.5rem !important;
         }
 
         [data-testid="stWidgetLabel"] {
             font-size: 1.1rem !important;
-            color: #edf2f7 !important;
+            color: #15334C !important;
             font-weight: 400 !important;
             margin-bottom: 0.8rem !important;
         }
 
         .stTextInput .st-bk {
-            background: rgba(255, 255, 255, 0.04);
+            background: #FFFFFF;
             border-radius: 0.8rem;
         }
 
         .stTextInput input {
-            background: rgba(255, 255, 255, 0.06) !important;
-            border: 1px solid rgba(255, 255, 255, 0.06) !important;
-            color: #edf2f7 !important;
+            background: #FFFFFF !important;
+            border: 1px solid #87B9D2 !important;
+            color: #15334C !important;
             border-radius: 0.75rem !important;
             font-size: 1rem !important;
             min-height: 2.8rem !important;
@@ -84,7 +86,7 @@ st.markdown(
         }
 
         .stTextInput input::placeholder {
-            color: rgba(237, 242, 247, 0.54) !important;
+            color: #52738C !important;
         }
 
         .stMarkdown p,
@@ -96,14 +98,21 @@ st.markdown(
         }
 
         .stExpander {
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid #D0E7F5;
             border-radius: 0.8rem;
+            background: #FFFFFF;
+        }
+
+        h2, h3 {
+            color: #087D99 !important;
         }
     </style>
     """,
     unsafe_allow_html=True,
 )
-st.title("WealthWise")
+logo_col, title_col = st.columns([1, 11], vertical_alignment="center")
+logo_col.image(ROBOT, width=90)
+title_col.title("WealthWise")
 st.caption("Personalised financial guidance from your own documents. Not financial advice.")
 st.info(
     "Public demo: please choose **Use sample documents**, or upload fictional files. "
@@ -164,7 +173,7 @@ if "report" in st.session_state:
         st.rerun()
 
     for message in st.session_state.chat_messages:
-        with st.chat_message(message["role"]):
+        with st.chat_message(message["role"], avatar=ROBOT if message["role"] == "assistant" else None):
             st.markdown(message["content"])
 
     question = st.chat_input("Ask WealthWise about your finances")
@@ -181,7 +190,7 @@ if "report" in st.session_state:
         with st.chat_message("user"):
             st.markdown(question)
         try:
-            with st.chat_message("assistant"):
+            with st.chat_message("assistant", avatar=ROBOT):
                 with st.spinner("Thinking..."):
                     answer = answer_question(
                         profile,

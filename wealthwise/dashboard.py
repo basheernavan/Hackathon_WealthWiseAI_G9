@@ -24,37 +24,37 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         """
         <style>
             .st-key-health-score-card {
-                background: linear-gradient(120deg, rgba(19, 78, 74, 0.32), rgba(15, 23, 42, 0.7));
-                border: 1px solid #285b5b;
-                border-top: 3px solid #55c6b5;
+                background: linear-gradient(120deg, #FFFFFF, #D0E7F5);
+                border: 1px solid #87B9D2;
+                border-top: 3px solid #087D99;
                 border-radius: 0.8rem;
                 padding: 1rem 1.25rem 0.5rem;
             }
             .st-key-health-score-card [data-testid="stMetricValue"] {
-                color: #e6fff8;
+                color: #15334C;
                 font-size: 3rem;
                 font-weight: 700;
             }
             [data-testid="stMetric"] {
-                background: rgba(18, 31, 48, 0.72);
-                border: 1px solid #25364a;
+                background: #FFFFFF;
+                border: 1px solid #D0E7F5;
                 border-radius: 0.7rem;
                 padding: 0.85rem 1rem;
             }
             [data-testid="stMetricLabel"] {
-                color: #b7c8d9;
+                color: #52738C;
             }
             .st-key-recommendation-spending {
-                border-top: 3px solid #e8ae62;
-                background: rgba(112, 73, 26, 0.12);
+                border-top: 3px solid #E97132;
+                background: rgba(233, 113, 50, 0.06);
             }
             .st-key-recommendation-debt {
-                border-top: 3px solid #6ba9e8;
-                background: rgba(32, 73, 112, 0.12);
+                border-top: 3px solid #15334C;
+                background: rgba(21, 51, 76, 0.05);
             }
             .st-key-recommendation-savings {
-                border-top: 3px solid #55c6b5;
-                background: rgba(19, 78, 74, 0.12);
+                border-top: 3px solid #087D99;
+                background: rgba(8, 125, 153, 0.06);
             }
             .st-key-recommendation-spending [data-testid="stMetricValue"],
             .st-key-recommendation-debt [data-testid="stMetricValue"],
@@ -316,7 +316,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
             y=alt.Y("Measure:N", sort=["Income", "Spending"], title=None),
             color=alt.Color(
                 "Colour:N",
-                scale=alt.Scale(domain=["Income", "Spending"], range=["#55c6b5", "#e8ae62"]),
+                scale=alt.Scale(domain=["Income", "Spending"], range=["#087D99", "#E97132"]),
                 legend=None,
             ),
             tooltip=[
@@ -326,7 +326,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         )
         .properties(height=100)
         .configure_view(strokeOpacity=0)
-        .configure_axis(gridColor="#26364a", labelColor="#c7d4e2", titleColor="#c7d4e2")
+        .configure_axis(gridColor="#D0E7F5", labelColor="#52738C", titleColor="#52738C")
     )
     st.altair_chart(
         comparison_chart,
@@ -349,7 +349,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         domain_max = max(chart_data[0]["Monthly spending"] * 1.15, 1.0)
         bars = (
             alt.Chart(chart_data_source)
-            .mark_bar(color="#55c6b5", cornerRadiusEnd=4)
+            .mark_bar(color="#087D99", cornerRadiusEnd=4)
             .encode(
                 x=alt.X(
                     "Monthly spending:Q",
@@ -366,7 +366,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         )
         value_labels = (
             alt.Chart(chart_data_source)
-            .mark_text(align="left", baseline="middle", dx=7, color="#edf5fc", fontSize=12)
+            .mark_text(align="left", baseline="middle", dx=7, color="#15334C", fontSize=12)
             .encode(
                 x="Monthly spending:Q",
                 y=alt.Y("Category:N", sort="-x"),
@@ -377,7 +377,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
             alt.layer(bars, value_labels)
             .properties(height=max(220, len(chart_data) * 36))
             .configure_view(strokeOpacity=0)
-            .configure_axis(gridColor="#26364a", labelColor="#c7d4e2", titleColor="#c7d4e2")
+            .configure_axis(gridColor="#D0E7F5", labelColor="#52738C", titleColor="#52738C")
         )
         st.altair_chart(
             spending_chart,

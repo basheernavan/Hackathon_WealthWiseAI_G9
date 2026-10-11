@@ -32,6 +32,15 @@ def test_upload_size_is_limited_in_streamlit_config():
     assert config["theme"]["primaryColor"]
 
 
+def test_theme_uses_the_pitch_deck_brand():
+    import tomllib
+
+    root = Path(__file__).resolve().parents[1]
+    theme = tomllib.loads((root / ".streamlit" / "config.toml").read_text())["theme"]
+    assert (theme["base"], theme["primaryColor"], theme["textColor"]) == ("light", "#087D99", "#15334C")
+    assert (root / "assets" / "wealthwise_robot.png").exists()
+
+
 def test_page_ends_with_disclaimer_footer():
     at = run_app()
     footer = at.caption[-1].value.lower()
