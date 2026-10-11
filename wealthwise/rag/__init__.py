@@ -25,6 +25,15 @@ _NO_OPENROUTER_KEY = (
     "For open-ended suggestions, add OPENROUTER_API_KEY to your local .env file and restart WealthWise. "
     "Questions answered directly from your report still work without AI."
 )
+_OFF_TOPIC = (
+    "I can only help with questions about your own finances in the documents you uploaded, "
+    "such as spending, income, subscriptions, debt or savings."
+)
+_INJECTION_PATTERN = (
+    r"\b(?:ignore|disregard|forget)\b.{0,30}\b(?:instructions|rules|prompt)\b"
+    r"|\bsystem prompt\b|\bjailbreak\b|\byou are now\b|\bdeveloper mode\b"
+)
+_NUMBER_PATTERN = r"\d[\d,]*(?:\.\d+)?"
 _TAKEAWAY_REJECTION_PATTERN = (
     r"\b(?:don't|do not|won't|would rather not)\b.*\b(?:reduce|cut|stop|give up)\b.*\btakeaway\b"
     r"|\btakeaway\b.*\b(?:don't|do not|won't|would rather not)\b.*\b(?:reduce|cut|stop|give up)\b"
@@ -657,6 +666,16 @@ def _question_has_context(question: str, context: str) -> bool:
     return bool(terms(question) & terms(context))
 
 
+def _numbers_are_grounded(answer: str, evidence: str) -> bool:
+    """ADR-0001: every figure in a model answer must appear in the data it was given (small counts excepted)."""
+
+    def numbers(text: str) -> set[float]:
+        return {round(abs(float(token.replace(",", ""))), 2) for token in re.findall(_NUMBER_PATTERN, text)}
+
+    known = numbers(evidence)
+    return all(value <= 12 or value in known for value in numbers(answer))
+
+
 def _answer_from_profile(
     profile: FinancialProfile,
     report: Report,
@@ -743,6 +762,8 @@ def answer_question(
             takeaway_declined
             and re.search(r"\bwhat else|other options|anything else\b", question.lower())
         )
+        if re.search(_INJECTION_PATTERN, question.lower()):
+            return _OFF_TOPIC
         question = _contextualize_merchant_follow_up(
             profile, question, recent_history, conversation_context
         )
@@ -934,6 +955,10 @@ def answer_question(
         )
         response = model.invoke([SystemMessage(content=_COACH_SYSTEM_PROMPT), HumanMessage(content=user_prompt)])
         answer = response if isinstance(response, str) else response.content
-        return answer.strip() if isinstance(answer, str) and answer.strip() else _APOLOGY
+        if not isinstance(answer, str) or not answer.strip():
+            return _APOLOGY
+        if not _numbers_are_grounded(answer, f"{metrics_context}\n{rows_context}\n{question}"):
+            return _INSUFFICIENT_EVIDENCE
+        return answer.strip()
     except Exception:
         return _APOLOGY
