@@ -2,10 +2,16 @@
 # Public demo: keep uploads small (MB per file).
 maxUploadSize = 5
 
+[client]
+# Hide the developer "Deploy" menu in the demo.
+toolbarMode = "minimal"
+
 [theme]
-# Matches the dark CSS in app.py; teal is the one accent colour.
-base = "dark"
-primaryColor = "#14b8a6"
-backgroundColor = "#040b12"
-secondaryBackgroundColor = "#0b1a26"
-textColor = "#edf2f7"
+# Brand sheet: Deep Blue text, Teal accent, Soft Grey background, Light Blue panels, Poppins.
+# Matches the CSS in app.py and wealthwise/dashboard.py. Falls back to sans-serif offline.
+base = "light"
+primaryColor = "#0EA5A0"
+backgroundColor = "#F5F7FA"
+secondaryBackgroundColor = "#E6F2FF"
+textColor = "#0B2D5B"
+font = "Poppins:https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap, sans-serif"

@@ -150,7 +150,7 @@ def test_spending_chart_orders_categories_and_labels_values_in_euros(mock_report
     assert bars["encoding"]["x"]["axis"]["format"] == ",.0f"
     assert bars["encoding"]["x"]["scale"]["domainMax"] == pytest.approx(1552.5)
     assert bars["encoding"]["tooltip"][1]["format"] == ",.2f"
-    assert bars["mark"]["color"] == "#55c6b5"
+    assert bars["mark"]["color"] == "#0EA5A0"
     assert labels["encoding"]["text"]["field"] == "Amount label"
 
 
@@ -168,7 +168,7 @@ def test_report_explains_when_spending_categories_and_subscriptions_are_empty(mo
 def test_render_report_shows_avalanche_debt_plan_summary(mock_report):
     at = run_report(mock_report)
     visible_text = " ".join(
-        element.value for element in (*at.markdown, *at.caption, *at.info, *at.metric)
+        element.value for element in (*at.markdown, *at.caption, *at.info, *at.success, *at.metric)
     )
 
     assert "Debt repayment plan" in [heading.value for heading in at.subheader]

@@ -14,7 +14,7 @@ def run_app() -> AppTest:
 
 def test_page_shows_header_and_disclaimer():
     at = run_app()
-    assert at.title[0].value == "WealthWise"
+    assert any("Make your money" in element.value for element in at.markdown)
     assert "Not financial advice" in at.caption[0].value
     assert not at.exception
 
@@ -30,6 +30,29 @@ def test_upload_size_is_limited_in_streamlit_config():
     config = tomllib.loads((Path(__file__).resolve().parents[1] / ".streamlit" / "config.toml").read_text())
     assert config["server"]["maxUploadSize"] <= 5
     assert config["theme"]["primaryColor"]
+
+
+def test_theme_uses_the_brand_sheet():
+    import tomllib
+
+    root = Path(__file__).resolve().parents[1]
+    theme = tomllib.loads((root / ".streamlit" / "config.toml").read_text())["theme"]
+    assert (theme["base"], theme["primaryColor"], theme["textColor"]) == ("light", "#0EA5A0", "#0B2D5B")
+    assert theme["font"].startswith("Poppins:")
+    for name in ("wealthwise_logo.png", "wealthwise_icon.png", "wealthwise_robot.png"):
+        assert (root / "assets" / name).exists()
+
+
+def test_landing_page_try_demo_loads_the_sample_report(monkeypatch):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    at = run_app()
+    assert {"Features", "How it works", "Built with trust and transparency", "Future roadmap"}.issubset(
+        {heading.value for heading in at.subheader}
+    )
+    next(b for b in at.button if b.label == "Try the Demo").click().run()
+    assert not at.exception
+    assert "report" in at.session_state
+    assert "Future roadmap" not in {heading.value for heading in at.subheader}
 
 
 def test_page_ends_with_disclaimer_footer():
@@ -198,3 +221,52 @@ def test_new_chat_and_profile_change_clear_conversation(monkeypatch, sample_prof
     at.session_state["profile"] = changed_profile
     at.run()
     assert at.session_state["chat_messages"] == []
+
+
+def test_document_chips_escape_uploaded_filenames(monkeypatch, sample_profile):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    sources = [sample_profile.sources[0].model_copy(update={"filename": "<img src=x onerror=alert(1)>.pdf"})]
+    at = AppTest.from_file("../app.py", default_timeout=120).run()
+    at.session_state["profile"] = sample_profile.model_copy(update={"sources": sources})
+    at.session_state["report"] = Report.model_validate_json(
+        (Path(__file__).resolve().parents[1] / "samples" / "mock_report.json").read_text(encoding="utf-8")
+    )
+    at.session_state["demo"] = True
+    at.run()
+
+    chips = next(element.value for element in at.markdown if element.value.startswith('<span class="ww-chip"'))
+    assert "<img" not in chips and "&lt;img" in chips
+
+
+def test_failed_reanalysis_shows_error_instead_of_crashing(monkeypatch):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    at = run_app()
+    next(b for b in at.button if b.label == "Use sample documents").click().run()
+    assert "report" in at.session_state
+
+    import wealthwise.ingestion as ingestion
+
+    def broken(documents):
+        raise ValueError("unreadable file")
+
+    monkeypatch.setattr(ingestion, "load_profile", broken)
+    next(b for b in at.button if b.label == "Use sample documents").click().run()
+
+    assert not at.exception
+    assert any("Could not analyse" in error.value for error in at.error)
+
+
+def test_sidebar_has_no_debt_link_without_a_debt_plan(monkeypatch, sample_profile):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    report = Report.model_validate_json(
+        (Path(__file__).resolve().parents[1] / "samples" / "mock_report.json").read_text(encoding="utf-8")
+    ).model_copy(update={"debt_plan": None})
+    at = AppTest.from_file("../app.py", default_timeout=120).run()
+    at.session_state["profile"] = sample_profile
+    at.session_state["report"] = report
+    at.session_state["demo"] = True
+    at.run()
+
+    sidebar = " ".join(element.value for element in at.sidebar.markdown)
+    assert 'href="#dashboard"' in sidebar
+    assert 'href="#debt"' not in sidebar
