@@ -1,7 +1,8 @@
 """Task A3: parse the bank statement PDF. Spec: docs/specs/01-ingestion.md#a3-bank-statement-pdf
 
 Two layouts: a table per page (samples/), or one text line per transaction such as
-`02/01/2026 Monthly Salary Credit EUR 3,272.00` (test_data/jan_2026/).
+`02/01/2026 Monthly Salary Credit EUR 3,272.00` (test_data/jan_2026/). A line with no date
+takes the date of the line above it (test_data/apr_aug_2026/).
 """
 
 import re
@@ -12,7 +13,7 @@ import pymupdf
 from wealthwise.contracts import Transaction
 
 HEADER = ["Date", "Description", "Money out", "Money in", "Balance"]
-LINE = re.compile(r"^(\d{2}/\d{2}/\d{4})\s+(.+?)\s+(Credit|Debit)\s+(?:EUR\s*)?([\d,]+\.\d{2})$", re.IGNORECASE)
+LINE = re.compile(r"^(?:(\d{2}/\d{2}/\d{4})\s+)?(.+?)\s+(Credit|Debit)\s+(?:EUR\s*)?([\d,]+\.\d{2})$", re.IGNORECASE)
 OPENING = re.compile(r"Opening Balance:\s*(?:EUR\s*)?(-?[\d,]+\.\d{2})", re.IGNORECASE)
 CLOSING = re.compile(r"Closing Balance:\s*(?:EUR\s*)?(-?[\d,]+\.\d{2})", re.IGNORECASE)
 
@@ -65,11 +66,13 @@ def from_lines(text: str) -> tuple[list[Transaction], list[str]]:
     opening = OPENING.search(text)
     balance = money(opening.group(1)) if opening else None
     transactions: list[Transaction] = []
+    day = None
     for line in text.splitlines():
         match = LINE.match(line.strip())
-        if not match:
+        if not match or not (match.group(1) or day):
             continue
-        day, description, direction, amount = match.groups()
+        day = match.group(1) or day
+        _, description, direction, amount = match.groups()
         signed = money(amount) if direction.lower() == "credit" else -money(amount)
         balance = round(balance + signed, 2) if balance is not None else None
         d, m, y = map(int, day.split("/"))
