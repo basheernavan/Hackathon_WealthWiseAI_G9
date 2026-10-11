@@ -77,6 +77,21 @@ pytest
 
 The files under [samples/](samples/) are fictional and intended for demos and tests. [test_data/](test_data/) contains additional fictional layouts.
 
+## Deploy (Streamlit Community Cloud)
+
+1. At [share.streamlit.io](https://share.streamlit.io), choose **Create app**, pick this repo, branch `main`, main file `app.py`.
+2. Under **Advanced settings**, choose Python 3.11 (the version the tests run on) and paste the secrets in TOML form:
+
+   ```toml
+   OPENROUTER_API_KEY = "sk-or-..."
+   WEALTHWISE_MODEL = "anthropic/claude-haiku-5.5"
+   ```
+
+   Root-level secrets become environment variables, so `wealthwise/llm.py` reads them as usual. Never commit `.streamlit/secrets.toml`. Without a key the app still runs on template text.
+3. Set a spending limit on the OpenRouter key before sharing the link.
+
+Uploads are limited to PDF, CSV and XLSX, at most 5 files of 5 MB each (`.streamlit/config.toml`), and the page asks visitors to use the sample documents.
+
 ## Limitations and privacy
 
 - This is a hackathon pilot, not a production banking service or regulated financial adviser. Check all extracted figures against the source documents before acting.

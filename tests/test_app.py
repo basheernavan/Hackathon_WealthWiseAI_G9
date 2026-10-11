@@ -19,6 +19,18 @@ def test_page_shows_header_and_disclaimer():
     assert not at.exception
 
 
+def test_page_warns_visitors_to_use_sample_documents():
+    at = run_app()
+    assert any("sample documents" in info.value and "real" in info.value for info in at.info)
+
+
+def test_upload_size_is_limited_in_streamlit_config():
+    import tomllib
+
+    config = tomllib.loads((Path(__file__).resolve().parents[1] / ".streamlit" / "config.toml").read_text())
+    assert config["server"]["maxUploadSize"] <= 5
+
+
 def test_sample_documents_produce_a_report_without_errors(monkeypatch):
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     at = run_app()
