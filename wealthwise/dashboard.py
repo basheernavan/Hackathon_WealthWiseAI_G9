@@ -5,7 +5,7 @@ import streamlit as st
 
 from wealthwise.analysis.categorise import category_for
 from wealthwise.analysis.plans import MAX_MONTHS
-from wealthwise.contracts import Category, FinancialProfile, Report
+from wealthwise.contracts import Category, DebtKind, FinancialProfile, Report
 
 
 def format_eur(amount: float) -> str:
@@ -19,55 +19,167 @@ def format_pct(fraction: float) -> str:
     return f"{fraction * 100:.1f}%"
 
 
+COMPONENT_LABELS = {
+    "savings_rate": "Savings rate",
+    "debt_to_income": "Debt-to-income",
+    "emergency_fund": "Emergency fund",
+    "discretionary_share": "Discretionary share",
+}
+
+
+def score_gauge_svg(score: int) -> str:
+    """Semicircle gauge filled to score/100; the number itself is the st.metric drawn over it."""
+    filled = max(0, min(score, 100))
+    return (
+        '<svg viewBox="0 0 220 125" width="100%" style="max-width:260px;display:block;margin:0 auto" '
+        f'role="img" aria-label="Financial Health Score gauge, {filled} out of 100">'
+        '<defs><linearGradient id="ww-gauge" x1="0" x2="1"><stop offset="0" stop-color="#0EA5A0"/>'
+        '<stop offset="1" stop-color="#22C55E"/></linearGradient></defs>'
+        '<path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="#E6F2FF" stroke-width="18" '
+        'stroke-linecap="round"/>'
+        '<path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="url(#ww-gauge)" stroke-width="18" '
+        f'stroke-linecap="round" pathLength="100" stroke-dasharray="{filled} 100"/></svg>'
+    )
+
+
+def component_bar_html(name: str, value: float, progress: float) -> str:
+    """One score component: label, its measured value and a coloured progress bar."""
+    shown = f"{value:.1f} months" if name == "emergency_fund" else format_pct(value)
+    progress = max(0.0, min(progress, 1.0))
+    colour = "#22C55E" if progress >= 0.75 else "#F59E0B" if progress >= 0.4 else "#EF4444"
+    return (
+        f'<div class="ww-component"><span>{COMPONENT_LABELS.get(name, name.replace("_", " ").title())}</span>'
+        f"<span>{shown}</span></div>"
+        f'<div class="ww-bar"><div style="width:{progress * 100:.0f}%;background:{colour}"></div></div>'
+    )
+
+
+def debt_summary(profile: FinancialProfile | None) -> str:
+    """'2 loans / 1 credit card' from the profile, or a generic note without one."""
+    if profile is None or not profile.debts:
+        return "Outstanding balance in the report"
+    loans = sum(debt.kind == DebtKind.LOAN for debt in profile.debts)
+    cards = len(profile.debts) - loans
+    return f"{loans} loan{'s' * (loans != 1)} / {cards} credit card{'s' * (cards != 1)}"
+
+
 def render_report(report: Report, profile: FinancialProfile | None = None) -> None:
     st.markdown(
         """
         <style>
             .st-key-health-score-card {
-                background: linear-gradient(120deg, #FFFFFF, #D0E7F5);
-                border: 1px solid #87B9D2;
-                border-top: 3px solid #087D99;
-                border-radius: 0.8rem;
-                padding: 1rem 1.25rem 0.5rem;
+                background: #FFFFFF;
+                border: 1px solid #E2E8F0;
+                border-radius: 1rem;
+                padding: 1.25rem 1.5rem 1rem;
+                box-shadow: 0 6px 20px rgba(11, 45, 91, 0.06);
             }
-            .st-key-health-score-card [data-testid="stMetricValue"] {
-                color: #15334C;
-                font-size: 3rem;
+            .st-key-score-gauge [data-testid="stMetric"] {
+                background: transparent;
+                border: none;
+                padding: 0;
+                margin-top: -4.6rem;
+                text-align: center;
+            }
+            .st-key-score-gauge [data-testid="stMetricValue"] {
+                color: #0B2D5B;
+                font-size: 2.6rem;
                 font-weight: 700;
+                justify-content: center;
+            }
+            .st-key-score-gauge [data-testid="stMetricValue"] > div {
+                margin: 0 auto;
+            }
+            .st-key-score-gauge [data-testid="stCaptionContainer"] {
+                text-align: center;
+            }
+            .st-key-score-gauge [data-testid="stCaptionContainer"] p {
+                display: inline-block;
+                background: #FEF3C7;
+                color: #92400E;
+                border-radius: 999px;
+                padding: 0.1rem 0.8rem;
+                font-weight: 600;
+            }
+            .st-key-score-band-good [data-testid="stCaptionContainer"] p {
+                background: #DCFCE7;
+                color: #166534;
+            }
+            .st-key-score-band-needs-attention [data-testid="stCaptionContainer"] p {
+                background: #FEE2E2;
+                color: #991B1B;
+            }
+            .ww-component {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.92rem;
+                color: #0B2D5B;
+                margin-top: 0.35rem;
+            }
+            .ww-component span:last-child {
+                font-weight: 600;
+            }
+            .ww-bar {
+                background: #E6F2FF;
+                border-radius: 999px;
+                height: 8px;
+                overflow: hidden;
+                margin: 0.3rem 0 0.15rem;
+            }
+            .ww-bar > div {
+                height: 100%;
+                border-radius: 999px;
             }
             [data-testid="stMetric"] {
                 background: #FFFFFF;
-                border: 1px solid #D0E7F5;
                 border-radius: 0.7rem;
-                padding: 0.85rem 1rem;
+                padding: 0.4rem 0.2rem;
             }
             [data-testid="stMetricLabel"] {
-                color: #52738C;
+                color: #5B6B82;
+            }
+            [data-testid="stMetricValue"] {
+                color: #0B2D5B;
+                font-weight: 700;
+            }
+            [class*="st-key-overview-"] {
+                background: #FFFFFF;
+                border-color: #E2E8F0 !important;
+                border-top: 3px solid #0EA5A0 !important;
+                border-radius: 1rem;
+                min-height: 150px;
+                padding: 0.9rem;
+            }
+            .st-key-overview-monthly-spending {
+                border-top-color: #F59E0B !important;
+            }
+            .st-key-overview-total-debt {
+                border-top-color: #EF4444 !important;
+            }
+            .st-key-overview-monthly-surplus,
+            .st-key-overview-emergency-fund {
+                border-top-color: #22C55E !important;
+            }
+            [class*="st-key-recommendation-"] {
+                background: #FFFFFF;
+                border-color: #E2E8F0 !important;
+                border-radius: 1rem;
+                min-height: 380px;
+                padding: 1rem;
             }
             .st-key-recommendation-spending {
-                border-top: 3px solid #E97132;
-                background: rgba(233, 113, 50, 0.06);
+                border-top: 4px solid #F59E0B !important;
             }
             .st-key-recommendation-debt {
-                border-top: 3px solid #15334C;
-                background: rgba(21, 51, 76, 0.05);
+                border-top: 4px solid #EF4444 !important;
             }
             .st-key-recommendation-savings {
-                border-top: 3px solid #087D99;
-                background: rgba(8, 125, 153, 0.06);
+                border-top: 4px solid #22C55E !important;
             }
             .st-key-recommendation-spending [data-testid="stMetricValue"],
             .st-key-recommendation-debt [data-testid="stMetricValue"],
             .st-key-recommendation-savings [data-testid="stMetricValue"] {
                 font-size: 1.55rem !important;
-            }
-            [class*="st-key-overview-"] {
-                min-height: 150px;
-                padding: 0.9rem;
-            }
-            [class*="st-key-recommendation-"] {
-                min-height: 380px;
-                padding: 1rem;
             }
             @media (max-width: 900px) {
                 div[data-testid="stHorizontalBlock"] {
@@ -83,27 +195,32 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         unsafe_allow_html=True,
     )
     score = report.health_score
-    st.subheader("Financial Health Score")
+    st.subheader("Financial Health Score", anchor="dashboard")
     with st.container(border=True, key="health-score-card"):
-        st.metric("Financial Health Score", f"{score.score}/100")
-        st.caption(f"Band: {score.band.title()}")
-
-    component_columns = st.columns(len(score.components)) if score.components else []
-    for column, component in zip(component_columns, score.components):
-        progress = component.points / component.max_points if component.max_points else 0
-        with column:
-            st.caption(component.name.replace("_", " ").title())
-            st.progress(max(0, min(progress, 1)))
-            st.caption(f"{component.points:g} / {component.max_points} points")
+        gauge_column, components_column = st.columns((2, 3), vertical_alignment="center")
+        with gauge_column.container(key="score-gauge"):
+            st.markdown(score_gauge_svg(score.score), unsafe_allow_html=True)
+            st.metric("Financial Health Score", f"{score.score}/100", label_visibility="collapsed")
+            with st.container(key=f"score-band-{score.band.replace(' ', '-')}"):
+                st.caption(f"Band: {score.band.title()}")
+        with components_column:
+            for component in score.components:
+                progress = component.points / component.max_points if component.max_points else 0
+                st.markdown(component_bar_html(component.name, component.value, progress), unsafe_allow_html=True)
+                st.caption(f"{component.points:g} / {component.max_points} points")
 
     metrics = report.metrics
     st.subheader("Financial Overview")
     subscription_total = round(sum(item.monthly_amount for item in report.subscriptions), 2)
     overview_cards = [
         ("Monthly income", format_eur(metrics.monthly_income), f"Average across {metrics.months_covered} months"),
-        ("Monthly spending", format_eur(metrics.monthly_spending), "Includes debt repayments"),
+        (
+            "Monthly spending",
+            format_eur(metrics.monthly_spending),
+            f"Across {len(metrics.spending_by_category)} categories; includes debt repayments",
+        ),
         ("Monthly surplus", format_eur(metrics.monthly_surplus), "Historical average; not a guarantee"),
-        ("Total debt", format_eur(metrics.total_debt), "Outstanding balance in the report"),
+        ("Total debt", format_eur(metrics.total_debt), debt_summary(profile)),
         ("Reported balance", format_eur(metrics.current_balance), "Latest account balance in the transactions"),
         (
             "Emergency fund",
@@ -127,7 +244,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
                     st.metric(label, value)
                     st.caption(description)
 
-    st.subheader("AI Recommendations")
+    st.subheader("AI Recommendations", anchor="recommendations")
     recommendations = {recommendation.agent.value: recommendation for recommendation in report.recommendations}
     ordered_recommendations = [
         recommendations[agent]
@@ -316,7 +433,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
             y=alt.Y("Measure:N", sort=["Income", "Spending"], title=None),
             color=alt.Color(
                 "Colour:N",
-                scale=alt.Scale(domain=["Income", "Spending"], range=["#087D99", "#E97132"]),
+                scale=alt.Scale(domain=["Income", "Spending"], range=["#0EA5A0", "#F59E0B"]),
                 legend=None,
             ),
             tooltip=[
@@ -326,7 +443,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         )
         .properties(height=100)
         .configure_view(strokeOpacity=0)
-        .configure_axis(gridColor="#D0E7F5", labelColor="#52738C", titleColor="#52738C")
+        .configure_axis(gridColor="#E6F2FF", labelColor="#5B6B82", titleColor="#5B6B82")
     )
     st.altair_chart(
         comparison_chart,
@@ -334,7 +451,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         alt="Monthly average income compared with monthly average spending.",
     )
 
-    st.subheader("Spending breakdown")
+    st.subheader("Spending breakdown", anchor="spending")
     chart_data = [
         {
             "Category": category.value.replace("_", " ").title(),
@@ -349,7 +466,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         domain_max = max(chart_data[0]["Monthly spending"] * 1.15, 1.0)
         bars = (
             alt.Chart(chart_data_source)
-            .mark_bar(color="#087D99", cornerRadiusEnd=4)
+            .mark_bar(color="#0EA5A0", cornerRadiusEnd=4)
             .encode(
                 x=alt.X(
                     "Monthly spending:Q",
@@ -366,7 +483,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         )
         value_labels = (
             alt.Chart(chart_data_source)
-            .mark_text(align="left", baseline="middle", dx=7, color="#15334C", fontSize=12)
+            .mark_text(align="left", baseline="middle", dx=7, color="#0B2D5B", fontSize=12)
             .encode(
                 x="Monthly spending:Q",
                 y=alt.Y("Category:N", sort="-x"),
@@ -377,7 +494,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
             alt.layer(bars, value_labels)
             .properties(height=max(220, len(chart_data) * 36))
             .configure_view(strokeOpacity=0)
-            .configure_axis(gridColor="#D0E7F5", labelColor="#52738C", titleColor="#52738C")
+            .configure_axis(gridColor="#E6F2FF", labelColor="#5B6B82", titleColor="#5B6B82")
         )
         st.altair_chart(
             spending_chart,
@@ -409,7 +526,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
 
     if report.debt_plan is not None:
         plan = report.debt_plan
-        st.subheader("Debt repayment plan")
+        st.subheader("Debt repayment plan", anchor="debt")
         payoff_column, summary_column = st.columns((2, 1))
         with payoff_column:
             st.caption(f"Strategy: {plan.strategy.title()}")

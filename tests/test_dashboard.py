@@ -150,7 +150,7 @@ def test_spending_chart_orders_categories_and_labels_values_in_euros(mock_report
     assert bars["encoding"]["x"]["axis"]["format"] == ",.0f"
     assert bars["encoding"]["x"]["scale"]["domainMax"] == pytest.approx(1552.5)
     assert bars["encoding"]["tooltip"][1]["format"] == ",.2f"
-    assert bars["mark"]["color"] == "#087D99"
+    assert bars["mark"]["color"] == "#0EA5A0"
     assert labels["encoding"]["text"]["field"] == "Amount label"
 
 

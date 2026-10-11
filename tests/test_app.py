@@ -14,7 +14,7 @@ def run_app() -> AppTest:
 
 def test_page_shows_header_and_disclaimer():
     at = run_app()
-    assert at.title[0].value == "WealthWise"
+    assert any("Make your money" in element.value for element in at.markdown)
     assert "Not financial advice" in at.caption[0].value
     assert not at.exception
 
@@ -32,13 +32,27 @@ def test_upload_size_is_limited_in_streamlit_config():
     assert config["theme"]["primaryColor"]
 
 
-def test_theme_uses_the_pitch_deck_brand():
+def test_theme_uses_the_brand_sheet():
     import tomllib
 
     root = Path(__file__).resolve().parents[1]
     theme = tomllib.loads((root / ".streamlit" / "config.toml").read_text())["theme"]
-    assert (theme["base"], theme["primaryColor"], theme["textColor"]) == ("light", "#087D99", "#15334C")
-    assert (root / "assets" / "wealthwise_robot.png").exists()
+    assert (theme["base"], theme["primaryColor"], theme["textColor"]) == ("light", "#0EA5A0", "#0B2D5B")
+    assert theme["font"].startswith("Poppins:")
+    for name in ("wealthwise_logo.png", "wealthwise_icon.png", "wealthwise_robot.png"):
+        assert (root / "assets" / name).exists()
+
+
+def test_landing_page_try_demo_loads_the_sample_report(monkeypatch):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    at = run_app()
+    assert {"Features", "How it works", "Built with trust and transparency", "Future roadmap"}.issubset(
+        {heading.value for heading in at.subheader}
+    )
+    next(b for b in at.button if b.label == "Try the Demo").click().run()
+    assert not at.exception
+    assert "report" in at.session_state
+    assert "Future roadmap" not in {heading.value for heading in at.subheader}
 
 
 def test_page_ends_with_disclaimer_footer():

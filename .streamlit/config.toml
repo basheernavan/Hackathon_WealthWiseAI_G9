@@ -3,10 +3,11 @@
 maxUploadSize = 5
 
 [theme]
-# Brand colours from the pitch deck (documents/WealthWise_Heading_Robots.pptx); matches the CSS in app.py.
+# Brand sheet: Deep Blue text, Teal accent, Soft Grey background, Light Blue panels, Poppins.
+# Matches the CSS in app.py and wealthwise/dashboard.py. Falls back to sans-serif offline.
 base = "light"
-primaryColor = "#087D99"
-backgroundColor = "#EAF4FC"
-secondaryBackgroundColor = "#D0E7F5"
-textColor = "#15334C"
-font = "sans serif"
+primaryColor = "#0EA5A0"
+backgroundColor = "#F5F7FA"
+secondaryBackgroundColor = "#E6F2FF"
+textColor = "#0B2D5B"
+font = "Poppins:https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap, sans-serif"
