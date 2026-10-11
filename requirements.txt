@@ -1,6 +1,7 @@
 streamlit==1.65.0
 langgraph==1.2.14
 langchain-openai==1.7.0
+langsmith==0.14.7
 chromadb==1.5.9
 pandas==3.0.6
 pymupdf==1.28.2

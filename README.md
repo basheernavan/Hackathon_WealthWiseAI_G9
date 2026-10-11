@@ -67,6 +67,18 @@ streamlit run app.py
 pytest
 ```
 
+## Tracing, evals and guardrails
+
+Ask WealthWise has guardrails: prompt-injection attempts are refused without calling the model, and a model answer with a figure that is not in the report data is replaced with a "couldn't verify that" reply.
+
+To trace runs in [LangSmith](https://smith.langchain.com), add a LangSmith API key to `.env` and set `LANGSMITH_TRACING=true`. Each question shows up as an "Ask WealthWise" run in the `wealthwise` project, including the ones a guardrail declined. The run's input is just the question, but the traced model call includes the report data, so tracing is for local use and eval runs only: do not add LangSmith keys to Streamlit Cloud Secrets.
+
+The eval set in [wealthwise/evals.py](wealthwise/evals.py) lists questions on the sample documents, each with the expected outcome (answered or declined) and, where there is one, the figure from the answer key. `pytest` runs the cases that need no model. To run every case through the live model and record it as a LangSmith experiment (needs `OPENROUTER_API_KEY` and `LANGSMITH_API_KEY`):
+
+```bash
+python scripts/run_evals.py
+```
+
 ## Hackathon demo
 
 1. Start the app and choose **Use sample documents** to load fictional data, or upload your own supported documents.
