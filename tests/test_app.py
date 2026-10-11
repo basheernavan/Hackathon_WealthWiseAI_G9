@@ -221,3 +221,18 @@ def test_new_chat_and_profile_change_clear_conversation(monkeypatch, sample_prof
     at.session_state["profile"] = changed_profile
     at.run()
     assert at.session_state["chat_messages"] == []
+
+
+def test_document_chips_escape_uploaded_filenames(monkeypatch, sample_profile):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    sources = [sample_profile.sources[0].model_copy(update={"filename": "<img src=x onerror=alert(1)>.pdf"})]
+    at = AppTest.from_file("../app.py", default_timeout=120).run()
+    at.session_state["profile"] = sample_profile.model_copy(update={"sources": sources})
+    at.session_state["report"] = Report.model_validate_json(
+        (Path(__file__).resolve().parents[1] / "samples" / "mock_report.json").read_text(encoding="utf-8")
+    )
+    at.session_state["demo"] = True
+    at.run()
+
+    chips = next(element.value for element in at.markdown if element.value.startswith('<span class="ww-chip"'))
+    assert "<img" not in chips and "&lt;img" in chips

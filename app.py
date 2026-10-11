@@ -1,5 +1,6 @@
 """WealthWise Streamlit entry point. Task C1: docs/specs/03-dashboard-and-rag.md#c1-app-shell-apppy"""
 
+import html
 import re
 from pathlib import Path
 
@@ -434,7 +435,8 @@ if has_report:
     st.subheader(f"{len(profile.sources)} documents read")
     st.markdown(
         "".join(
-            f'<span class="ww-chip">{source.filename} · {source.document_type.value.replace("_", " ")}</span>'
+            f'<span class="ww-chip">{html.escape(source.filename)} · '
+            f'{html.escape(source.document_type.value.replace("_", " "))}</span>'
             for source in profile.sources
         ),
         unsafe_allow_html=True,
