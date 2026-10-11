@@ -26,6 +26,12 @@ def test_three_template_recommendations_in_order_without_a_key(figures):
     assert [r.agent for r in recommendations] == [AgentName.SPENDING, AgentName.DEBT, AgentName.SAVINGS]
     assert [r.monthly_impact for r in recommendations] == pytest.approx([107.56, 160.98, 160.98], abs=0.01)
     assert all(r.title and r.detail for r in recommendations)
+    spending = recommendations[0]
+    assert spending.title == "Review your takeaway spending"
+    assert "illustrative option" in spending.detail
+    assert "not a recommendation" in spending.detail
+    assert recommendations[1].title == "Consider the avalanche debt plan"
+    assert "Adding EUR 160.98/month" in recommendations[1].detail
 
 
 def test_spending_evidence_is_the_five_largest_takeaway_outflows(figures):
