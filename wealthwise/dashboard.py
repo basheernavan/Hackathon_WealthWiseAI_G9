@@ -24,37 +24,47 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         """
         <style>
             .st-key-health-score-card {
-                background: linear-gradient(120deg, rgba(19, 78, 74, 0.32), rgba(15, 23, 42, 0.7));
-                border: 1px solid #285b5b;
-                border-top: 3px solid #55c6b5;
-                border-radius: 0.8rem;
-                padding: 1rem 1.25rem 0.5rem;
+                background: linear-gradient(120deg, #E0EFE3, #F8FBF7);
+                border: 1px solid #C8DCCB;
+                border-top: 3px solid #28734B;
+                border-radius: 1rem;
+                padding: 1.1rem 1.3rem 0.65rem;
             }
             .st-key-health-score-card [data-testid="stMetricValue"] {
-                color: #e6fff8;
+                color: #174D32;
                 font-size: 3rem;
                 font-weight: 700;
             }
             [data-testid="stMetric"] {
-                background: rgba(18, 31, 48, 0.72);
-                border: 1px solid #25364a;
-                border-radius: 0.7rem;
+                background: #FFFFFF;
+                border: 1px solid #D3E0D3;
+                border-radius: 0.85rem;
                 padding: 0.85rem 1rem;
+                color: #20352A !important;
+            }
+            [data-testid="stMetricValue"] {
+                color: #20352A !important;
             }
             [data-testid="stMetricLabel"] {
-                color: #b7c8d9;
+                color: #526B58 !important;
+            }
+            [data-testid="stCaption"] {
+                color: #526B58 !important;
             }
             .st-key-recommendation-spending {
-                border-top: 3px solid #e8ae62;
-                background: rgba(112, 73, 26, 0.12);
+                border: 1px solid #E4D9BD;
+                border-top: 3px solid #A67825;
+                background: #FBF8F0;
             }
             .st-key-recommendation-debt {
-                border-top: 3px solid #6ba9e8;
-                background: rgba(32, 73, 112, 0.12);
+                border: 1px solid #D2E1D5;
+                border-top: 3px solid #397F73;
+                background: #F4F9F5;
             }
             .st-key-recommendation-savings {
-                border-top: 3px solid #55c6b5;
-                background: rgba(19, 78, 74, 0.12);
+                border: 1px solid #C8DCCB;
+                border-top: 3px solid #28734B;
+                background: #F0F7F1;
             }
             .st-key-recommendation-spending [data-testid="stMetricValue"],
             .st-key-recommendation-debt [data-testid="stMetricValue"],
@@ -68,6 +78,12 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
             [class*="st-key-recommendation-"] {
                 min-height: 380px;
                 padding: 1rem;
+            }
+            [data-testid="stProgress"] > div > div {
+                background-color: #28734B;
+            }
+            [data-testid="stProgress"] > div {
+                background-color: #DCE9DD;
             }
             @media (max-width: 900px) {
                 div[data-testid="stHorizontalBlock"] {
@@ -151,7 +167,8 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
                     f"{metrics.months_covered} months."
                 )
                 st.metric("Potential monthly cut", format_eur(report.identified_cuts))
-                st.progress(0.5, text="Illustration: 50% lower takeaway spending")
+                st.caption("Illustration: 50% lower takeaway spending")
+                st.progress(0.5)
                 st.caption("Optional scenario only; compare it with other priorities.")
             elif agent == "debt" and report.debt_plan is not None:
                 plan = report.debt_plan
@@ -174,12 +191,12 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
                     )
                 st.metric("Monthly extra payment", format_eur(plan.extra_monthly_payment))
                 if projection_complete and plan.months_to_debt_free_current > 0:
+                    st.caption(
+                        f"Projected payoff: {plan.months_to_debt_free_with_extra} months "
+                        f"vs {plan.months_to_debt_free_current} on scheduled payments"
+                    )
                     st.progress(
                         min(plan.months_to_debt_free_with_extra / plan.months_to_debt_free_current, 1.0),
-                        text=(
-                            f"Projected payoff: {plan.months_to_debt_free_with_extra} months "
-                            f"vs {plan.months_to_debt_free_current} on scheduled payments"
-                        ),
                     )
                 if projection_complete:
                     st.caption("Projection assumes the recorded balances, APRs and monthly payments stay unchanged.")
@@ -197,7 +214,8 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
                 )
                 st.metric("Monthly savings", format_eur(plan.monthly_amount))
                 progress = min(max(metrics.current_balance / plan.target_amount, 0.0), 1.0) if plan.target_amount else 0.0
-                st.progress(progress, text="Progress toward the report's 3-month target")
+                st.caption("Progress toward the report's 3-month target")
+                st.progress(progress)
                 if plan.months_to_target is not None:
                     st.caption(f"At this allocation, the estimate is {plan.months_to_target} months.")
 
@@ -316,7 +334,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
             y=alt.Y("Measure:N", sort=["Income", "Spending"], title=None),
             color=alt.Color(
                 "Colour:N",
-                scale=alt.Scale(domain=["Income", "Spending"], range=["#55c6b5", "#e8ae62"]),
+                scale=alt.Scale(domain=["Income", "Spending"], range=["#28734B", "#B1873F"]),
                 legend=None,
             ),
             tooltip=[
@@ -326,7 +344,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         )
         .properties(height=100)
         .configure_view(strokeOpacity=0)
-        .configure_axis(gridColor="#26364a", labelColor="#c7d4e2", titleColor="#c7d4e2")
+        .configure_axis(gridColor="#DCE6DC", labelColor="#405B48", titleColor="#405B48")
     )
     st.altair_chart(
         comparison_chart,
@@ -349,7 +367,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         domain_max = max(chart_data[0]["Monthly spending"] * 1.15, 1.0)
         bars = (
             alt.Chart(chart_data_source)
-            .mark_bar(color="#55c6b5", cornerRadiusEnd=4)
+            .mark_bar(color="#28734B", cornerRadiusEnd=4)
             .encode(
                 x=alt.X(
                     "Monthly spending:Q",
@@ -366,7 +384,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         )
         value_labels = (
             alt.Chart(chart_data_source)
-            .mark_text(align="left", baseline="middle", dx=7, color="#edf5fc", fontSize=12)
+            .mark_text(align="left", baseline="middle", dx=7, color="#20352A", fontSize=12)
             .encode(
                 x="Monthly spending:Q",
                 y=alt.Y("Category:N", sort="-x"),
@@ -377,7 +395,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
             alt.layer(bars, value_labels)
             .properties(height=max(220, len(chart_data) * 36))
             .configure_view(strokeOpacity=0)
-            .configure_axis(gridColor="#26364a", labelColor="#c7d4e2", titleColor="#c7d4e2")
+            .configure_axis(gridColor="#DCE6DC", labelColor="#405B48", titleColor="#405B48")
         )
         st.altair_chart(
             spending_chart,

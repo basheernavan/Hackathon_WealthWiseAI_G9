@@ -37,16 +37,14 @@ st.markdown(
     """
     <style>
         .stApp {
-            background: #040b12;
-            color: #edf2f7;
+            background:
+                linear-gradient(135deg, #E5F0E5 0%, #F6F9F5 58%, #EEF4ED 100%);
+            color: #20352A;
         }
 
         .main .block-container {
             max-width: 1380px;
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-            padding-left: 3rem;
-            padding-right: 3rem;
+            padding: 2.5rem 3rem 3rem;
         }
 
         [data-testid="stBottom"] {
@@ -54,37 +52,84 @@ st.markdown(
         }
 
         h1 {
-            font-size: 4.2rem !important;
-            font-weight: 800 !important;
-            letter-spacing: -0.06em !important;
-            line-height: 1 !important;
-            margin-bottom: 1.5rem !important;
+            color: #174D32 !important;
+            font-size: clamp(2.8rem, 5vw, 4rem) !important;
+            font-weight: 750 !important;
+            letter-spacing: -0.045em !important;
+            line-height: 1.05 !important;
+            margin-bottom: 0.75rem !important;
+        }
+
+        h2, h3 {
+            color: #205B3B !important;
+            letter-spacing: -0.02em;
+        }
+
+        [data-testid="stSidebar"] {
+            background: #EAF1E9;
+            border-right: 1px solid #D3E0D3;
         }
 
         [data-testid="stWidgetLabel"] {
-            font-size: 1.1rem !important;
-            color: #edf2f7 !important;
-            font-weight: 400 !important;
-            margin-bottom: 0.8rem !important;
-        }
-
-        .stTextInput .st-bk {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 0.8rem;
-        }
-
-        .stTextInput input {
-            background: rgba(255, 255, 255, 0.06) !important;
-            border: 1px solid rgba(255, 255, 255, 0.06) !important;
-            color: #edf2f7 !important;
-            border-radius: 0.75rem !important;
+            color: #294936 !important;
             font-size: 1rem !important;
-            min-height: 2.8rem !important;
-            padding: 0.6rem 0.9rem !important;
+            font-weight: 550 !important;
+            margin-bottom: 0.45rem !important;
         }
 
-        .stTextInput input::placeholder {
-            color: rgba(237, 242, 247, 0.54) !important;
+        [data-testid="stCaption"] {
+            color: #526B58 !important;
+        }
+
+        [data-testid="stTextInput"] input,
+        [data-testid="stChatInput"] textarea {
+            background: #FFFFFF !important;
+            border: 1px solid #BDCEBF !important;
+            color: #20352A !important;
+            border-radius: 0.8rem !important;
+            min-height: 2.8rem !important;
+            padding: 0.65rem 0.9rem !important;
+        }
+
+        [data-testid="stTextInput"] input::placeholder,
+        [data-testid="stChatInput"] textarea::placeholder {
+            color: #718476 !important;
+        }
+
+        [data-testid="stFileUploaderDropzone"] {
+            background: rgba(224, 239, 227, 0.78);
+            border: 1px dashed #8EAD94;
+            border-radius: 1rem;
+        }
+
+        [data-testid="stButton"] button {
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: border-color 150ms ease, background-color 150ms ease;
+        }
+
+        [data-testid="stButton"] button:not([kind="primary"]) {
+            background: #FFFFFF;
+            border-color: #BDCEBF;
+            color: #245B3C;
+        }
+
+        [data-testid="stButton"] button:hover {
+            border-color: #28734B;
+        }
+
+        [data-testid="stAlert"] {
+            border-radius: 0.85rem;
+        }
+
+        [data-testid="stAlert"] p {
+            color: #294936 !important;
+        }
+
+        [data-testid="stExpander"] {
+            background: rgba(255, 255, 255, 0.68);
+            border: 1px solid #D3E0D3;
+            border-radius: 0.85rem;
         }
 
         .stMarkdown p,
@@ -92,18 +137,12 @@ st.markdown(
         .stAlert p {
             font-size: 1rem !important;
             line-height: 1.5 !important;
-            margin: 0 !important;
-        }
-
-        .stExpander {
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 0.8rem;
         }
     </style>
     """,
     unsafe_allow_html=True,
 )
-st.title("WealthWise")
+st.title("WealthWise", anchor=False)
 st.caption("Personalised financial guidance from your own documents. Not financial advice.")
 st.info(
     "Public demo: please choose **Use sample documents**, or upload fictional files. "
