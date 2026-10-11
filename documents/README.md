@@ -1,6 +1,10 @@
 # Background documents
 
-Pitch deck, speaker notes, early setup notes and budget, kept for the presentation. **They describe an earlier plan.** Where they disagree with the code, the repo wins:
+Pitch deck, speaker notes, early setup notes and budget, kept for the presentation.
+
+The pitch deck (`WealthWise_Heading_Robots.pptx`) and its speaker notes (`WealthWise.docx`) match the app: architecture, stack, the "numbers from code" trust story and the demo figures from `samples/expected.json`. The speaker notes follow the deck's 8 slides.
+
+**The setup notes and the budget describe an earlier plan.** Where they disagree with the code, the repo wins:
 
 | These files say | What we actually do |
 | --- | --- |

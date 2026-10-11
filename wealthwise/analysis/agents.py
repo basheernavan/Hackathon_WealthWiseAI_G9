@@ -20,10 +20,13 @@ from wealthwise.contracts import (
     Transaction,
 )
 from wealthwise.llm import get_chat_model
+from wealthwise.analysis.plans import MAX_MONTHS
 
 ORDER = [AgentName.SPENDING, AgentName.DEBT, AgentName.SAVINGS]
 PROMPT = (
-    "You are WealthWise, a plain-spoken financial coach. Rewrite this {agent} recommendation for the user. "
+    "You are WealthWise, a plain-spoken and non-judgmental financial coach. Rewrite this {agent} recommendation "
+    "for the user. Present spending reductions as optional hypothetical scenarios, never commands. "
+    "Do not imply that recurring payments are optional without evidence. "
     "Use only these figures and quote them exactly; do not invent numbers. "
     "Title: 12 words or fewer. Detail: at most 2 sentences.\n\nFigures:\n{figures}\n\nDraft title: {title}\nDraft detail: {detail}"
 )
@@ -66,7 +69,11 @@ def spending_agent(state: State) -> dict:
     cuts = state["identified_cuts"]
     evidence = sorted((t for t in state["transactions"] if t.category == Category.TAKEAWAY), key=lambda t: t.amount)[:5]
     if takeaway:
-        title, detail = "Halve takeaway spending", f"Takeaway averages {eur(takeaway)}/month. Cutting it in half frees {eur(cuts)}/month."
+        title = "Review your takeaway spending"
+        detail = (
+            f"Takeaway averages {eur(takeaway)}/month. A 50% reduction is an illustrative option "
+            f"worth {eur(cuts)}/month, not a recommendation."
+        )
     else:
         share = state["metrics"].discretionary_share
         title, detail = "Keep discretionary spending in check", f"Discretionary spending is {share:.0%} of what you spend each month."
@@ -86,11 +93,22 @@ def debt_agent(state: State) -> dict:
         "months saved": plan.months_saved,
         "interest saved": eur(plan.interest_saved),
     }
+    projection_complete = (
+        plan.months_to_debt_free_current < MAX_MONTHS
+        and plan.months_to_debt_free_with_extra < MAX_MONTHS
+    )
+    if not projection_complete:
+        figures["projection status"] = f"Payoff not reached within {MAX_MONTHS} months"
     draft = Recommendation(
         agent=AgentName.DEBT,
-        title=f"Pay off the {plan.payoff_order[0]} first",
-        detail=f"Adding {eur(plan.extra_monthly_payment)}/month makes you debt-free {plan.months_saved} months earlier "
-        f"and saves {eur(plan.interest_saved)} in interest.",
+        title="Consider the avalanche debt plan",
+        detail=(
+            f"An extra {eur(plan.extra_monthly_payment)}/month is the report's illustrative allocation. "
+            "The available data does not support a payoff or interest-saving estimate within the modelling period."
+            if not projection_complete
+            else f"Adding {eur(plan.extra_monthly_payment)}/month makes you debt-free "
+            f"{plan.months_saved} months earlier and saves {eur(plan.interest_saved)} in interest."
+        ),
         monthly_impact=plan.extra_monthly_payment,
         evidence=evidence,
     )

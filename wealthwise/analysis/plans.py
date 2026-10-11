@@ -39,7 +39,7 @@ def simulate(debts: list[Debt], extra: float) -> tuple[int, float]:
 def build_plans(metrics: Metrics, debts: list[Debt]) -> tuple[float, DebtPayoffPlan | None, SavingsPlan]:
     """Return (identified_cuts, debt_plan or None when there are no debts, savings_plan)."""
     identified_cuts = round(0.5 * metrics.spending_by_category.get(Category.TAKEAWAY, 0.0), 2)
-    freed = max(metrics.monthly_surplus, 0.0) + identified_cuts
+    freed = round(max(metrics.monthly_surplus + identified_cuts, 0.0), 2)
 
     debt_plan = None
     if debts:
@@ -47,13 +47,14 @@ def build_plans(metrics: Metrics, debts: list[Debt]) -> tuple[float, DebtPayoffP
         savings_monthly = round(freed - extra, 2)
         months_current, interest_current = simulate(debts, 0.0)
         months_extra, interest_extra = simulate(debts, extra)
+        projection_complete = months_current < MAX_MONTHS and months_extra < MAX_MONTHS
         debt_plan = DebtPayoffPlan(
             payoff_order=[d.name for d in avalanche_order(debts)],
             extra_monthly_payment=extra,
             months_to_debt_free_current=months_current,
             months_to_debt_free_with_extra=months_extra,
-            months_saved=months_current - months_extra,
-            interest_saved=round(interest_current - interest_extra, 2),
+            months_saved=months_current - months_extra if projection_complete else 0,
+            interest_saved=round(interest_current - interest_extra, 2) if projection_complete else 0.0,
         )
     else:
         savings_monthly = round(freed, 2)

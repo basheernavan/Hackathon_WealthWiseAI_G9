@@ -1,5 +1,6 @@
 """WealthWise Streamlit entry point. Task C1: docs/specs/03-dashboard-and-rag.md#c1-app-shell-apppy"""
 
+import re
 from pathlib import Path
 
 import streamlit as st
@@ -31,6 +32,76 @@ def run_pipeline(documents: list[UploadedDocument]) -> None:
 
 
 st.set_page_config(page_title="WealthWise", layout="wide")
+st.markdown(
+    """
+    <style>
+        .stApp {
+            background: #040b12;
+            color: #edf2f7;
+        }
+
+        .main .block-container {
+            max-width: 1380px;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+
+        [data-testid="stBottom"] {
+            position: static !important;
+        }
+
+        h1 {
+            font-size: 4.2rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.06em !important;
+            line-height: 1 !important;
+            margin-bottom: 1.5rem !important;
+        }
+
+        [data-testid="stWidgetLabel"] {
+            font-size: 1.1rem !important;
+            color: #edf2f7 !important;
+            font-weight: 400 !important;
+            margin-bottom: 0.8rem !important;
+        }
+
+        .stTextInput .st-bk {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 0.8rem;
+        }
+
+        .stTextInput input {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            color: #edf2f7 !important;
+            border-radius: 0.75rem !important;
+            font-size: 1rem !important;
+            min-height: 2.8rem !important;
+            padding: 0.6rem 0.9rem !important;
+        }
+
+        .stTextInput input::placeholder {
+            color: rgba(237, 242, 247, 0.54) !important;
+        }
+
+        .stMarkdown p,
+        .stWrite p,
+        .stAlert p {
+            font-size: 1rem !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+        }
+
+        .stExpander {
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 0.8rem;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 st.title("WealthWise")
 st.caption("Personalised financial guidance from your own documents. Not financial advice.")
 
@@ -47,7 +118,7 @@ if sample_col.button("Use sample documents"):
     documents = [UploadedDocument(filename=n, content=(SAMPLES / n).read_bytes()) for n in SAMPLE_FILES]
 
 if documents:
-    for key in ("profile", "report", "demo"):
+    for key in ("profile", "report", "demo", "chat_messages", "chat_profile_key", "chat_context"):
         st.session_state.pop(key, None)
     try:
         with st.spinner("Reading your documents..."):
@@ -67,13 +138,53 @@ if "report" in st.session_state:
         for warning in source.warnings:
             st.warning(f"{source.filename}: {warning}")
 
-    render_report(report)
+    render_report(report, profile=profile)
 
     st.subheader("Ask WealthWise")
-    question = st.text_input("Ask a question about your finances", placeholder="How much do I spend on takeaway?")
+    profile_key = profile.model_dump_json()
+    if st.session_state.get("chat_profile_key") != profile_key:
+        st.session_state.chat_profile_key = profile_key
+        st.session_state.chat_messages = []
+        st.session_state.chat_context = {"preferences": []}
+    st.caption(
+        "When AI is enabled, your question and relevant document excerpts may be sent to OpenRouter. "
+        "Financial figures are calculated from your data."
+    )
+    if st.button("Clear chat", key="clear_chat"):
+        st.session_state.chat_messages = []
+        st.session_state.chat_context = {}
+        st.rerun()
+
+    for message in st.session_state.chat_messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    question = st.chat_input("Ask WealthWise about your finances")
     if question:
+        st.session_state.chat_messages.append({"role": "user", "content": question})
+        if re.search(
+            r"\b(?:don't|do not|won't|would rather not)\b.*\b(?:reduce|cut|stop|give up)\b.*\btakeaway\b"
+            r"|\btakeaway\b.*\b(?:don't|do not|won't|would rather not)\b.*\b(?:reduce|cut|stop|give up)\b",
+            question.lower(),
+        ):
+            preferences = st.session_state.chat_context.setdefault("preferences", [])
+            if "avoid_takeaway_reduction" not in preferences:
+                preferences.append("avoid_takeaway_reduction")
+        with st.chat_message("user"):
+            st.markdown(question)
         try:
-            with st.spinner("Thinking..."):
-                st.write(answer_question(profile, report, question))
+            with st.chat_message("assistant"):
+                with st.spinner("Thinking..."):
+                    answer = answer_question(
+                        profile,
+                        report,
+                        question,
+                        history=st.session_state.chat_messages[-12:],
+                        context=st.session_state.chat_context,
+                    )
+                st.markdown(answer)
+            st.session_state.chat_messages.append({"role": "assistant", "content": answer})
         except NotImplementedError:
             st.info("Ask WealthWise is coming soon")
+        except Exception as error:
+            st.error(f"Ask WealthWise couldn't answer this just now: {error}")
