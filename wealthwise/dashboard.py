@@ -88,7 +88,7 @@ def render_report(report: Report, profile: FinancialProfile | None = None) -> No
         st.metric("Financial Health Score", f"{score.score}/100")
         st.caption(f"Band: {score.band.title()}")
 
-    component_columns = st.columns(len(score.components))
+    component_columns = st.columns(len(score.components)) if score.components else []
     for column, component in zip(component_columns, score.components):
         progress = component.points / component.max_points if component.max_points else 0
         with column:
