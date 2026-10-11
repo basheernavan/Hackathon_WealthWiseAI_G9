@@ -730,3 +730,9 @@ def test_prompt_injection_is_refused_without_calling_the_model(monkeypatch, samp
 
     assert answer == rag._OFF_TOPIC
     assert model.messages == []
+
+
+def test_traces_send_only_the_question_not_the_financial_data(sample_profile, sample_report):
+    inputs = {"profile": sample_profile, "report": sample_report, "question": "How much on Deliveroo?", "history": []}
+
+    assert rag._trace_inputs(inputs) == {"question": "How much on Deliveroo?"}
